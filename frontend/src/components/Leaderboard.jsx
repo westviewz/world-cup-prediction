@@ -89,7 +89,19 @@ const Leaderboard = () => {
             </div>
           </motion.div>
         ) : (
-          <div className="glass rounded-3xl overflow-hidden">
+          <div className="space-y-8">
+            <div className="glass rounded-2xl p-6 border border-white/10">
+              <h3 className="text-premium-gold font-bold mb-4 flex items-center gap-2"><Trophy size={18} /> Scoring Rules</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5"><span className="text-gray-400 block mb-1">Correct Winner</span><span className="font-bold text-premium-gold">+50 pts</span></div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5"><span className="text-gray-400 block mb-1">Correct Runner-up</span><span className="font-bold text-premium-gold">+30 pts</span></div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5"><span className="text-gray-400 block mb-1">Exact Score*</span><span className="font-bold text-premium-gold">+100 pts</span></div>
+                <div className="bg-white/5 p-3 rounded-xl border border-white/5"><span className="text-gray-400 block mb-1">Goal Difference*</span><span className="font-bold text-premium-gold">+20 pts</span></div>
+              </div>
+              <p className="text-xs text-gray-500 mt-4">*Score points are only awarded if the entire matchup is predicted correctly.</p>
+            </div>
+
+            <div className="glass rounded-3xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
