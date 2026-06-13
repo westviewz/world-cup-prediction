@@ -176,8 +176,8 @@ router.put('/settings', auth, async (req, res) => {
         if (correctWinner) points += settings.pointsWinner;
         if (correctRunnerUp) points += settings.pointsRunnerUp;
         
-        // Only award score and goal difference points if the predicted matchup is completely correct
-        if (correctWinner && correctRunnerUp) {
+        // Only award score and goal difference points if the predicted matchup is completely correct and goals are provided
+        if (correctWinner && correctRunnerUp && settings.actualWinnerGoals !== null && settings.actualRunnerUpGoals !== null) {
           if (p.winnerGoals === settings.actualWinnerGoals && p.runnerUpGoals === settings.actualRunnerUpGoals) {
             points += settings.pointsExactScore;
           } else if ((p.winnerGoals - p.runnerUpGoals) === (settings.actualWinnerGoals - settings.actualRunnerUpGoals)) {
@@ -187,6 +187,15 @@ router.put('/settings', auth, async (req, res) => {
         
         p.points = points;
         await p.save();
+      }
+    } else {
+      // If actual results are cleared or incomplete, reset all points to 0
+      const predictions = await Prediction.find();
+      for (let p of predictions) {
+        if (p.points !== 0) {
+          p.points = 0;
+          await p.save();
+        }
       }
     }
 
