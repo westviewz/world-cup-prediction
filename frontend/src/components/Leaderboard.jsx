@@ -96,7 +96,7 @@ const Leaderboard = () => {
                   <tr className="bg-black/40 text-premium-goldLight border-b border-white/10">
                     <th className="p-4 md:p-6 font-semibold">Rank</th>
                     <th className="p-4 md:p-6 font-semibold">Name</th>
-                    <th className="p-4 md:p-6 font-semibold">Predicted Winner</th>
+                    <th className="p-4 md:p-6 font-semibold">Predicted Matchup</th>
                     <th className="p-4 md:p-6 font-semibold">Score</th>
                     <th className="p-4 md:p-6 font-semibold text-right">Points</th>
                   </tr>
@@ -117,9 +117,10 @@ const Leaderboard = () => {
                         <span className={`font-bold ${idx < 3 ? 'text-lg' : ''}`}>{idx + 1}</span>
                       </td>
                       <td className="p-4 md:p-6 font-medium">{user.name}</td>
-                      <td className="p-4 md:p-6 text-gray-300 flex items-center">
-                        <Flag team={user.winner} className="w-6 mr-3 rounded-sm" />
-                        {user.winner}
+                      <td className="p-4 md:p-6 text-gray-300 flex items-center gap-2 whitespace-nowrap">
+                        <span className="text-white flex items-center gap-2 font-medium"><Flag team={user.winner} className="w-6 rounded-sm" /> {user.winner}</span>
+                        <span className="text-xs text-premium-gold uppercase mx-1">vs</span>
+                        <span className="text-gray-400 flex items-center gap-2"><Flag team={user.runnerUp} className="w-5 rounded-sm grayscale opacity-70" /> {user.runnerUp}</span>
                       </td>
                       <td className="p-4 md:p-6 text-gray-400">{user.winnerGoals} - {user.runnerUpGoals}</td>
                       <td className="p-4 md:p-6 font-bold text-premium-gold text-right">{user.points}</td>
