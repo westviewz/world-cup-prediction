@@ -147,6 +147,7 @@ const Leaderboard = () => {
               </table>
             </div>
           </div>
+          </div>
         )}
       </div>
     </section>
