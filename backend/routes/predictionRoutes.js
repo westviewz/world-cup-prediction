@@ -60,7 +60,7 @@ router.get('/leaderboard', async (req, res) => {
     }
 
     const leaderboard = await Prediction.find()
-      .select('name points winner winnerGoals runnerUpGoals')
+      .select('name points winner runnerUp winnerGoals runnerUpGoals')
       .sort({ points: -1, createdAt: 1 })
       .limit(100);
 
