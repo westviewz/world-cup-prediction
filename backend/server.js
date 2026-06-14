@@ -15,7 +15,7 @@ app.use(helmet());
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB locally'))
+  .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('MongoDB connection error:', error));
 
 app.use('/api/predictions', require('./routes/predictionRoutes'));
