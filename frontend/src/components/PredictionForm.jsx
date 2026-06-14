@@ -126,6 +126,21 @@ const PredictionForm = () => {
     });
   };
 
+  const handleReset = () => {
+    localStorage.removeItem('predictionSubmitted');
+    localStorage.removeItem('predictionFormData');
+    setIsSuccess(false);
+    setStep(1);
+    setFormData({
+      name: '',
+      phone: '',
+      winner: '',
+      runnerUp: '',
+      winnerGoals: '',
+      runnerUpGoals: '',
+    });
+  };
+
   if (isSuccess) {
     return (
       <section className="py-20 px-4 min-h-[60vh] flex items-center justify-center">
@@ -142,6 +157,12 @@ const PredictionForm = () => {
             <p className="flex items-center gap-2"><strong>Runner-up:</strong> <Flag team={formData.runnerUp} /> {formData.runnerUp}</p>
             <p><strong>Score:</strong> {formData.winnerGoals} - {formData.runnerUpGoals}</p>
           </div>
+          <button 
+            onClick={handleReset}
+            className="mt-8 px-8 py-3 w-full sm:w-auto rounded-xl bg-red-600/20 text-red-400 font-bold hover:bg-red-600/40 border border-red-500/30 transition-colors flex items-center justify-center mx-auto gap-2"
+          >
+            Log Out / Reset
+          </button>
         </motion.div>
       </section>
     );
