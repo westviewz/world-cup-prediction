@@ -258,7 +258,7 @@ const PredictionForm = () => {
                       className={`p-4 rounded-2xl border-2 flex items-center justify-center gap-3 transition-all duration-300 cursor-pointer ${formData.winner === team ? 'bg-premium-gold/20 text-premium-gold border-premium-gold font-bold scale-105 shadow-[0_0_20px_rgba(251,191,36,0.3)] z-10' : 'bg-black/40 border-white/10 hover:border-white/30 text-white hover:bg-black/60'}`}
                     >
                       <span className="flex items-center justify-center mr-1"><Flag team={team} className="w-8 h-auto rounded" /></span>
-                      <span className="truncate text-lg">{team}</span>
+                      <span className="text-sm sm:text-base md:text-lg text-center leading-tight break-words max-w-full">{team}</span>
                     </button>
                   ))}
                   {filteredTeams.length === 0 && (
@@ -290,7 +290,7 @@ const PredictionForm = () => {
                       className={`p-4 rounded-2xl border-2 flex items-center justify-center gap-3 transition-all duration-300 cursor-pointer ${formData.winner === team ? 'opacity-30 cursor-not-allowed' : formData.runnerUp === team ? 'bg-gray-300/20 text-white border-gray-300 font-bold scale-105 shadow-[0_0_20px_rgba(209,213,219,0.3)] z-10' : 'bg-black/40 border-white/10 hover:border-white/30 text-white hover:bg-black/60'}`}
                     >
                       <span className="flex items-center justify-center mr-1"><Flag team={team} className="w-8 h-auto rounded" /></span>
-                      <span className="truncate text-lg">{team}</span>
+                      <span className="text-sm sm:text-base md:text-lg text-center leading-tight break-words max-w-full">{team}</span>
                     </button>
                   ))}
                   {filteredTeams.length === 0 && (
