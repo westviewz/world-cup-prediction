@@ -17,7 +17,7 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-premium-dark text-white font-sans overflow-x-hidden">
+      <div className="min-h-screen text-white font-sans overflow-x-hidden" style={{ background: '#0D0507' }}>
         <Routes>
           <Route path="/" element={
             !introFinished ? (

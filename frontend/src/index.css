@@ -1,41 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-premium-dark: #0f172a;
-  --color-premium-gold: #fbbf24;
-  --color-premium-goldLight: #fcd34d;
-  --color-premium-purple: #6d28d9;
-  --color-premium-red: #dc2626;
-  --background-image-stadium: url('https://images.unsplash.com/photo-1518605368461-1e1e38ce158d?q=80&w=2000&auto=format&fit=crop');
+  --color-wc-burgundy:    #4A0E1A;
+  --color-wc-crimson:     #7A1423;
+  --color-wc-gold:        #F4C542;
+  --color-wc-goldLight:   #F9E2AE;
+  --color-wc-orange:      #FF6B35;
+  --color-wc-champagne:   #F9E2AE;
+  --color-wc-dark:        #0D0507;
+  --color-wc-darkCard:    #1A0810;
+  --color-wc-muted:       #D9D9D9;
+  --background-image-stadium:  url('https://images.unsplash.com/photo-1568992688065-536aad8a12f6?q=80&w=2000&auto=format&fit=crop');
+  --background-image-stadium2: url('https://images.unsplash.com/photo-1551958219-acbc595d831d?q=80&w=2000&auto=format&fit=crop');
 }
 
 @layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 0;
+  }
+
   body {
-    background-color: var(--color-premium-dark);
-    color: white;
-    font-family: ui-sans-serif, system-ui, sans-serif;
+    background-color: #0D0507;
+    color: #ffffff;
+    font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0D0507; }
+  ::-webkit-scrollbar-thumb { background: #7A1423; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #F4C542; }
+
+  /* Number input — hide arrows on Chrome/Safari */
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+}
+
+/* ─── Utilities ─────────────────────────────────── */
+
+@utility glass-card {
+  background: rgba(26, 8, 16, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(244, 197, 66, 0.18);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(244,197,66,0.12);
+}
+
+@utility glass-light {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@utility gold-text {
+  background: linear-gradient(135deg, #F9E2AE 0%, #F4C542 40%, #c9920a 70%, #F4C542 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility gold-border {
+  border: 1px solid rgba(244, 197, 66, 0.45);
+}
+
+/* ─── Gold shimmer text animation ─── */
+.shimmer-text {
+  background: linear-gradient(90deg, #F9E2AE, #F4C542, #ffffff, #F4C542, #F9E2AE);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 300% center; }
+}
+
+/* ─── Floating animation ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-14px); }
+}
+.animate-float { animation: float 3.5s ease-in-out infinite; }
+
+/* ─── Glow pulse ─── */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 25px rgba(244,197,66,0.35); }
+  50%       { box-shadow: 0 0 65px rgba(244,197,66,0.75), 0 0 120px rgba(244,197,66,0.3); }
+}
+.animate-glow { animation: glowPulse 2.5s ease-in-out infinite; }
+
+/* ─── Score Input ─── */
+.score-input {
+  width: 5.5rem;
+  height: 7rem;
+  text-align: center;
+  background: #0D0507;
+  border: 2px solid rgba(244,197,66,0.3);
+  border-radius: 1rem;
+  font-size: 3.5rem;
+  font-weight: 900;
+  font-family: 'Inter', monospace;
+  color: #F4C542;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  text-shadow: 0 0 20px rgba(244,197,66,0.7);
+}
+.score-input:focus {
+  border-color: #F4C542;
+  box-shadow: 0 0 30px rgba(244,197,66,0.5);
+}
+
+@media (min-width: 480px) {
+  .score-input {
+    width: 7rem;
+    height: 8.5rem;
+    font-size: 4.5rem;
   }
 }
 
-@utility glass {
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+/* ─── Team Card ─── */
+.team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0.6rem;
+  border-radius: 1rem;
+  border: 2px solid rgba(255,255,255,0.08);
+  background: rgba(26,8,16,0.7);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.team-card:hover {
+  border-color: rgba(244,197,66,0.4);
+  background: rgba(244,197,66,0.07);
+  transform: translateY(-2px);
+}
+.team-card.selected {
+  border-color: #F4C542;
+  background: rgba(244,197,66,0.14);
+  box-shadow: 0 0 25px rgba(244,197,66,0.35);
+}
+.team-card:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* ─── Countdown flip ─── */
+.flip-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
-::-webkit-scrollbar-track {
-  background: #0f172a;
+.flip-digit {
+  background: rgba(26,8,16,0.85);
+  border: 1px solid rgba(244,197,66,0.3);
+  border-radius: 0.75rem;
+  box-shadow: 0 0 20px rgba(244,197,66,0.15), inset 0 2px 0 rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: #F4C542;
+  text-shadow: 0 0 20px rgba(244,197,66,0.8);
+  width: clamp(64px, 15vw, 100px);
+  height: clamp(64px, 15vw, 100px);
 }
-::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+
+/* ─── Stepper progress bar ─── */
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+.step-connector-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7A1423, #F4C542);
+  transition: width 0.5s ease;
+}
+
+/* ─── Section divider ─── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(244,197,66,0.3), transparent);
+  margin: 0 auto;
+  width: 80%;
 }
