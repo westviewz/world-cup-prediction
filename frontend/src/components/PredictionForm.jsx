@@ -329,7 +329,7 @@ const PredictionForm = () => {
                         min="0"
                         value={formData.winnerGoals}
                         onChange={e => setFormData({...formData, winnerGoals: e.target.value === '' ? '' : parseInt(e.target.value)})}
-                        className="relative w-28 h-32 text-center bg-[#0a0a0a] border-2 border-gray-800 rounded-xl p-2 text-6xl font-mono font-bold text-red-500 focus:outline-none focus:border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.5)] shadow-inner"
+                        className="relative w-24 h-28 sm:w-28 sm:h-32 text-center bg-[#0a0a0a] border-2 border-gray-800 rounded-xl p-2 text-5xl sm:text-6xl font-mono font-bold text-red-500 focus:outline-none focus:border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.5)] shadow-inner"
                         style={{ textShadow: '0 0 12px rgba(239, 68, 68, 0.9)' }}
                       />
                     </div>
@@ -370,8 +370,8 @@ const PredictionForm = () => {
                         min="0"
                         value={formData.runnerUpGoals}
                         onChange={e => setFormData({...formData, runnerUpGoals: e.target.value === '' ? '' : parseInt(e.target.value)})}
-                        className="relative w-28 h-32 text-center bg-[#0a0a0a] border-2 border-gray-800 rounded-xl p-2 text-6xl font-mono font-bold text-red-500 focus:outline-none focus:border-red-500 focus:shadow-[0_0_15px_rgba(239,68,68,0.5)] shadow-inner"
-                        style={{ textShadow: '0 0 12px rgba(239, 68, 68, 0.9)' }}
+                        className="relative w-24 h-28 sm:w-28 sm:h-32 text-center bg-[#0a0a0a] border-2 border-gray-800 rounded-xl p-2 text-5xl sm:text-6xl font-mono font-bold text-blue-500 focus:outline-none focus:border-blue-500 focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] shadow-inner"
+                        style={{ textShadow: '0 0 12px rgba(59, 130, 246, 0.9)' }}
                       />
                     </div>
                   </div>

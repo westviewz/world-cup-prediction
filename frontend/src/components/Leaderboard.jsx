@@ -77,10 +77,10 @@ const Leaderboard = () => {
             <Lock size={64} className="mx-auto text-premium-gold mb-6 opacity-50" />
             <h3 className="text-2xl md:text-3xl font-bold mb-4">Leaderboard Unlocks After World Cup Final</h3>
             
-            <div className="flex justify-center gap-4 md:gap-8 mt-8">
+            <div className="flex justify-center gap-2 sm:gap-4 md:gap-8 mt-8">
               {Object.entries(timeLeft).map(([unit, value]) => (
                 <div key={unit} className="flex flex-col items-center">
-                  <div className="w-20 h-20 md:w-24 md:h-24 bg-premium-dark rounded-2xl border border-white/20 flex items-center justify-center text-3xl md:text-4xl font-bold text-premium-gold shadow-lg">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-premium-dark rounded-2xl border border-white/20 flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-premium-gold shadow-lg">
                     {value.toString().padStart(2, '0')}
                   </div>
                   <span className="text-sm text-gray-400 mt-2 uppercase tracking-widest">{unit}</span>
