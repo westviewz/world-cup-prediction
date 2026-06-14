@@ -45,12 +45,12 @@ const Hero = ({ onPredictClick }) => {
   }, []);
 
   const topTeams = [
-    { team: 'Argentina',  code: 'ar', style: { top: '22%', left: '5%'   } },
-    { team: 'Brazil',     code: 'br', style: { top: '38%', left: '2%'   } },
-    { team: 'France',     code: 'fr', style: { top: '55%', left: '7%'   } },
-    { team: 'England',    code: 'gb-eng', style: { top: '22%', right: '5%'  } },
-    { team: 'Portugal',   code: 'pt', style: { top: '38%', right: '2%'  } },
-    { team: 'Germany',    code: 'de', style: { top: '55%', right: '7%'  } },
+    { team: 'Argentina',  code: 'ar', style: { top: '22%', left: '3%'   } },
+    { team: 'Brazil',     code: 'br', style: { top: '40%', left: '1%'   } },
+    { team: 'France',     code: 'fr', style: { top: '58%', left: '4%'   } },
+    { team: 'England',    code: 'gb-eng', style: { top: '22%', right: '3%'  } },
+    { team: 'Portugal',   code: 'pt', style: { top: '40%', right: '1%'  } },
+    { team: 'Germany',    code: 'de', style: { top: '58%', right: '4%'  } },
   ];
 
   return (

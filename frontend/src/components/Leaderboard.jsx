@@ -165,15 +165,27 @@ const Leaderboard = () => {
                 Results will be revealed after the FIFA World Cup 2026 Final
               </p>
 
-              {/* Countdown */}
-              <div className="flex justify-center gap-3 sm:gap-5">
-                <CountdownUnit value={timeLeft.days}    label="Days"    />
-                <div className="text-2xl font-black self-center pb-6 opacity-40" style={{ color: '#F4C542' }}>:</div>
-                <CountdownUnit value={timeLeft.hours}   label="Hours"   />
-                <div className="text-2xl font-black self-center pb-6 opacity-40" style={{ color: '#F4C542' }}>:</div>
-                <CountdownUnit value={timeLeft.minutes} label="Mins"    />
-                <div className="text-2xl font-black self-center pb-6 opacity-40" style={{ color: '#F4C542' }}>:</div>
-                <CountdownUnit value={timeLeft.seconds} label="Secs"    />
+              {/* Countdown — fully fluid, no overflow */}
+              <div className="countdown-row px-2">
+                <div className="flip-box">
+                  <div className="flip-digit animate-glow">{String(timeLeft.days).padStart(2,'0')}</div>
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400">Days</span>
+                </div>
+                <div className="countdown-sep">:</div>
+                <div className="flip-box">
+                  <div className="flip-digit animate-glow">{String(timeLeft.hours).padStart(2,'0')}</div>
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400">Hours</span>
+                </div>
+                <div className="countdown-sep">:</div>
+                <div className="flip-box">
+                  <div className="flip-digit animate-glow">{String(timeLeft.minutes).padStart(2,'0')}</div>
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400">Mins</span>
+                </div>
+                <div className="countdown-sep">:</div>
+                <div className="flip-box">
+                  <div className="flip-digit animate-glow">{String(timeLeft.seconds).padStart(2,'0')}</div>
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400">Secs</span>
+                </div>
               </div>
             </motion.div>
           ) : (

@@ -75,7 +75,7 @@ const ScoreStepper = ({ team, value, onChange, isWinner }) => (
   <div className="flex flex-col items-center gap-3">
     {/* Team card */}
     <div
-      className="relative flex flex-col items-center justify-center gap-2 rounded-2xl p-4 w-36 sm:w-44 h-40 sm:h-48 overflow-hidden"
+      className="relative flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 w-28 sm:w-40 h-32 sm:h-44 overflow-hidden"
       style={{
         background: isWinner
           ? 'linear-gradient(180deg,rgba(244,197,66,0.15) 0%,rgba(26,8,16,0.9) 100%)'
@@ -86,9 +86,9 @@ const ScoreStepper = ({ team, value, onChange, isWinner }) => (
     >
       <div className="absolute top-0 left-0 right-0 h-1"
         style={{ background: isWinner ? 'linear-gradient(90deg,transparent,#F4C542,transparent)' : 'none' }} />
-      <Flag team={team} className="w-16 sm:w-20 h-auto rounded-lg shadow-lg" />
-      <span className="text-xs sm:text-sm font-bold text-white text-center leading-tight break-words max-w-full">{team}</span>
-      <span className="text-[9px] font-black uppercase tracking-[0.18em]" style={{ color: isWinner ? '#F4C542' : '#9ca3af' }}>
+      <Flag team={team} className="w-12 sm:w-16 h-auto rounded-lg shadow-lg" />
+      <span className="text-[10px] sm:text-xs font-bold text-white text-center leading-tight break-words max-w-full">{team}</span>
+      <span className="text-[8px] font-black uppercase tracking-widest" style={{ color: isWinner ? '#F4C542' : '#9ca3af' }}>
         {isWinner ? 'WINNER' : 'RUNNER-UP'}
       </span>
     </div>
@@ -500,7 +500,7 @@ const PredictionForm = () => {
                 <motion.div key="s4" variants={slideVariants} initial="initial" animate="animate" exit="exit">
                   <h3 className="text-xl font-black mb-6 text-center" style={{ color: '#F4C542' }}>🎯 Predict the Final Score</h3>
 
-                  <div className="flex items-start justify-center gap-4 sm:gap-8 flex-wrap">
+                  <div className="flex flex-row items-center justify-center gap-2 sm:gap-6">
                     {/* Winner */}
                     <ScoreStepper
                       team={formData.winner}
@@ -510,11 +510,11 @@ const PredictionForm = () => {
                     />
 
                     {/* VS Divider */}
-                    <div className="flex flex-col items-center justify-center pt-8 gap-2 self-center">
+                    <div className="flex flex-col items-center justify-center gap-2 shrink-0">
                       <motion.span
                         animate={{ scale: [1, 1.08, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="text-4xl sm:text-5xl drop-shadow-[0_0_30px_rgba(244,197,66,0.8)]"
+                        className="text-3xl sm:text-5xl drop-shadow-[0_0_30px_rgba(244,197,66,0.8)]"
                       >🏆</motion.span>
                       <span className="text-xs font-black tracking-[0.25em]" style={{ color: 'rgba(244,197,66,0.5)' }}>VS</span>
                     </div>
