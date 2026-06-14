@@ -61,15 +61,16 @@ const Hero = ({ onPredictClick }) => {
         ref={bgRef}
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1568992688065-536aad8a12f6?q=80&w=2000&auto=format&fit=crop')",
+          backgroundImage: "url('/hero-bg.jpg')",
           height: '130%',
           top: '-15%',
+          backgroundPosition: 'center top',
         }}
       />
 
-      {/* Layered overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-wc-dark/80 via-wc-burgundy/40 to-wc-dark" />
-      <div className="absolute inset-0 bg-gradient-to-t from-wc-dark via-transparent to-wc-dark/60" />
+      {/* Layered overlays — lighter so the poster is visible */}
+      <div className="absolute inset-0 bg-gradient-to-b from-wc-dark/60 via-transparent to-wc-dark" />
+      <div className="absolute inset-0 bg-gradient-to-t from-wc-dark via-transparent to-wc-dark/40" />
 
       {/* Floodlight glow effects */}
       <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-wc-gold/5 blur-3xl pointer-events-none" />
@@ -100,12 +101,7 @@ const Hero = ({ onPredictClick }) => {
         ))}
       </div>
 
-      {/* Floating country badges (hidden on smallest phones) */}
-      <div className="absolute inset-0 pointer-events-none hidden sm:block">
-        {topTeams.map((t) => (
-          <FlagBadge key={t.team} {...t} />
-        ))}
-      </div>
+      {/* Floating country badges — hidden since image already has players */}
 
       {/* Hero content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
