@@ -4,7 +4,9 @@ import PredictionForm from '../components/PredictionForm';
 import Leaderboard from '../components/Leaderboard';
 
 const Home = () => {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(() => {
+    return localStorage.getItem('predictionSubmitted') === 'true';
+  });
 
   const handlePredictClick = () => {
     setShowForm(true);

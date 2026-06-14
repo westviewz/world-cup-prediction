@@ -6,7 +6,14 @@ import AdminDashboard from './pages/AdminDashboard';
 import IntroSequence from './components/IntroSequence';
 
 function App() {
-  const [introFinished, setIntroFinished] = useState(false);
+  const [introFinished, setIntroFinished] = useState(() => {
+    return localStorage.getItem('introFinished') === 'true';
+  });
+
+  const handleIntroFinish = () => {
+    localStorage.setItem('introFinished', 'true');
+    setIntroFinished(true);
+  };
 
   return (
     <Router>
@@ -14,7 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={
             !introFinished ? (
-              <IntroSequence onFinish={() => setIntroFinished(true)} />
+              <IntroSequence onFinish={handleIntroFinish} />
             ) : (
               <Home />
             )

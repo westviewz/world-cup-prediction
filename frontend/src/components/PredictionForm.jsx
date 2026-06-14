@@ -21,7 +21,9 @@ const PredictionForm = () => {
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(() => {
+    return localStorage.getItem('predictionSubmitted') === 'true';
+  });
   const [teamSearch, setTeamSearch] = useState('');
 
   const filteredTeams = teams.filter(team => 
@@ -64,6 +66,7 @@ const PredictionForm = () => {
     setIsSubmitting(true);
     try {
       await api.post('/predictions', formData);
+      localStorage.setItem('predictionSubmitted', 'true');
       setIsSuccess(true);
       triggerConfetti();
     } catch (err) {
