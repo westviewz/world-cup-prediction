@@ -11,13 +11,21 @@ const Flag = ({ team, className = "w-6 h-4" }) => {
 
 const PredictionForm = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    winner: '',
-    runnerUp: '',
-    winnerGoals: '',
-    runnerUpGoals: '',
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('predictionFormData');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {
+      name: '',
+      phone: '',
+      winner: '',
+      runnerUp: '',
+      winnerGoals: '',
+      runnerUpGoals: '',
+    };
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,6 +75,7 @@ const PredictionForm = () => {
     try {
       await api.post('/predictions', formData);
       localStorage.setItem('predictionSubmitted', 'true');
+      localStorage.setItem('predictionFormData', JSON.stringify(formData));
       setIsSuccess(true);
       triggerConfetti();
     } catch (err) {
