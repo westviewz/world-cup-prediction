@@ -32,6 +32,8 @@ const ParticleCanvas = ({ active, explode, width, height }) => {
     };
   };
 
+  const isMobile = width < 640;
+
   useEffect(() => {
     if (!active) return;
     const canvas = canvasRef.current;
@@ -39,14 +41,15 @@ const ParticleCanvas = ({ active, explode, width, height }) => {
     const ctx = canvas.getContext('2d');
 
     if (explode) {
-      for (let i = 0; i < 220; i++) particles.current.push(spawn(true));
+      const burstCount = isMobile ? 90 : 220;
+      for (let i = 0; i < burstCount; i++) particles.current.push(spawn(true));
     }
 
     const loop = () => {
       ctx.clearRect(0, 0, width, height);
 
-      /* ambient drizzle */
-      if (Math.random() < 0.4) particles.current.push(spawn(false));
+      /* ambient drizzle — halved on mobile for perf */
+      if (Math.random() < (isMobile ? 0.18 : 0.4)) particles.current.push(spawn(false));
 
       particles.current = particles.current.filter(p => p.life > 0);
 
@@ -108,16 +111,16 @@ const FloodLight = ({ style, delay, id }) => (
       boxShadow: '0 0 30px 12px rgba(244,197,66,0.9), 0 0 60px 30px rgba(244,197,66,0.4)',
       position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
     }} />
-    {/* cone beam */}
+    {/* cone beam — narrower on mobile */}
     <div style={{
       position: 'absolute',
       top: 12,
       left: '50%',
       transform: 'translateX(-50%)',
       width: 0, height: 0,
-      borderLeft:  '90px solid transparent',
-      borderRight: '90px solid transparent',
-      borderTop:   '260px solid rgba(244,197,66,0.07)',
+      borderLeft:  'clamp(40px, 6vw, 90px) solid transparent',
+      borderRight: 'clamp(40px, 6vw, 90px) solid transparent',
+      borderTop:   'clamp(130px, 18vh, 260px) solid rgba(244,197,66,0.07)',
       filter: 'blur(12px)',
     }} />
   </div>
@@ -370,14 +373,15 @@ const IntroSequence = ({ onFinish }) => {
       <div
         id="presented-by"
         style={{
-          position: 'absolute', top: '32%', left: 0, right: 0,
+          position: 'absolute', top: 'clamp(28%, 30%, 32%)', left: 0, right: 0,
           textAlign: 'center', opacity: 0, zIndex: 30,
-          letterSpacing: '0.45em',
-          fontSize: 'clamp(9px, 1.5vw, 13px)',
+          letterSpacing: '0.35em',
+          fontSize: 'clamp(8px, 2.5vw, 13px)',
           color: 'rgba(244,197,66,0.75)',
           fontFamily: "'Raleway', sans-serif",
           fontWeight: 300,
           textTransform: 'uppercase',
+          padding: '0 8px',
         }}
       >
         PRESENTED BY
@@ -387,10 +391,11 @@ const IntroSequence = ({ onFinish }) => {
       <div
         id="brand-wrap"
         style={{
-          position: 'absolute', top: '26%', left: 0, right: 0,
+          position: 'absolute', top: 'clamp(22%, 24%, 26%)', left: 0, right: 0,
           textAlign: 'center', opacity: 0, zIndex: 30,
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           overflow: 'visible',
+          padding: '0 12px',
         }}
       >
         {/* gold sweep overlay */}
@@ -409,14 +414,15 @@ const IntroSequence = ({ onFinish }) => {
         <div
           id="brand-text"
           style={{
-            fontSize: 'clamp(24px, 5.5vw, 64px)',
+            fontSize: 'clamp(20px, 6.5vw, 64px)',
             fontFamily: "'Cinzel', 'Georgia', serif",
             fontWeight: 900,
-            letterSpacing: '0.18em',
+            letterSpacing: 'clamp(0.06em, 0.18em, 0.18em)',
             color: '#F4C542',
             textShadow: '0 0 20px rgba(244,197,66,0.4)',
-            lineHeight: 1.1,
+            lineHeight: 1.15,
             position: 'relative', zIndex: 45,
+            wordBreak: 'keep-all',
           }}
         >
           <RevealText text="FOOTBALL GRAMAM" id="brand" />
@@ -426,9 +432,9 @@ const IntroSequence = ({ onFinish }) => {
         <div
           id="brand-presents"
           style={{
-            marginTop: 10,
-            fontSize: 'clamp(9px, 1.6vw, 14px)',
-            letterSpacing: '0.5em',
+            marginTop: 8,
+            fontSize: 'clamp(8px, 2vw, 14px)',
+            letterSpacing: '0.4em',
             color: 'rgba(255,255,255,0.55)',
             fontFamily: "'Raleway', sans-serif",
             fontWeight: 300,
@@ -445,23 +451,24 @@ const IntroSequence = ({ onFinish }) => {
         id="trophy-wrap"
         style={{
           position: 'relative', zIndex: 25,
-          marginTop: 20, opacity: 0,
+          marginTop: 'clamp(10px, 2vh, 20px)', opacity: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
       >
-        {/* glow halo */}
+        {/* glow halo — smaller on mobile */}
         <div
           id="trophy-glow"
           style={{
             position: 'absolute',
-            width: 180, height: 180,
+            width: 'clamp(100px, 25vw, 180px)',
+            height: 'clamp(100px, 25vw, 180px)',
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(244,197,66,0.35) 0%, transparent 70%)',
             opacity: 0, scale: 0.8, zIndex: 24,
           }}
         />
         <div style={{ position: 'relative', zIndex: 26 }}>
-          <TrophySVG size={clampSize(90, 130)} />
+          <TrophySVG size={clampSize(70, 130)} />
         </div>
       </div>
 
@@ -470,18 +477,18 @@ const IntroSequence = ({ onFinish }) => {
         id="headline-wc"
         style={{
           opacity: 0, zIndex: 30, textAlign: 'center',
-          fontSize: 'clamp(18px, 4.2vw, 52px)',
+          fontSize: 'clamp(15px, 5vw, 52px)',
           fontFamily: "'Cinzel', serif",
           fontWeight: 900,
-          letterSpacing: '0.12em',
+          letterSpacing: 'clamp(0.05em, 0.12em, 0.12em)',
           background: 'linear-gradient(90deg, #FFE08A 0%, #F4C542 50%, #FF6B35 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
           textShadow: 'none',
-          marginTop: 14,
-          lineHeight: 1.15,
-          padding: '0 12px',
+          marginTop: 'clamp(8px, 1.5vh, 14px)',
+          lineHeight: 1.2,
+          padding: '0 16px',
         }}
       >
         FIFA WORLD CUP 2026
@@ -492,12 +499,13 @@ const IntroSequence = ({ onFinish }) => {
         id="headline-sub"
         style={{
           opacity: 0, zIndex: 30, textAlign: 'center',
-          fontSize: 'clamp(10px, 2vw, 22px)',
+          fontSize: 'clamp(8px, 2.8vw, 22px)',
           fontFamily: "'Raleway', sans-serif",
           fontWeight: 600,
-          letterSpacing: '0.38em',
+          letterSpacing: 'clamp(0.12em, 0.38em, 0.38em)',
           color: 'rgba(255,255,255,0.8)',
-          marginTop: 8,
+          marginTop: 'clamp(4px, 1vh, 8px)',
+          padding: '0 12px',
         }}
       >
         PREDICTION CHALLENGE
@@ -508,17 +516,20 @@ const IntroSequence = ({ onFinish }) => {
         id="cta-wrap"
         style={{
           opacity: 0, zIndex: 35, textAlign: 'center',
-          marginTop: 32, display: 'flex', flexDirection: 'column', alignItems: 'center',
+          marginTop: 'clamp(16px, 3vh, 32px)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          padding: '0 16px',
         }}
       >
         <p style={{
-          fontSize: 'clamp(8px, 1.5vw, 13px)',
-          letterSpacing: '0.3em',
+          fontSize: 'clamp(7px, 2.2vw, 13px)',
+          letterSpacing: 'clamp(0.1em, 0.3em, 0.3em)',
           color: 'rgba(255,255,255,0.45)',
           fontFamily: "'Raleway', sans-serif",
           fontWeight: 300,
-          marginBottom: 16,
+          marginBottom: 'clamp(10px, 1.8vh, 16px)',
           textTransform: 'uppercase',
+          lineHeight: 1.6,
         }}>
           Choose the Winner · Runner-up · Final Score
         </p>
@@ -526,19 +537,22 @@ const IntroSequence = ({ onFinish }) => {
         <button
           onClick={handleEnter}
           style={{
-            padding: 'clamp(10px,1.8vw,15px) clamp(28px,5vw,56px)',
+            padding: 'clamp(12px, 2vh, 15px) clamp(24px, 7vw, 56px)',
             background: 'linear-gradient(135deg, #F4C542 0%, #FF6B35 100%)',
             border: 'none',
             borderRadius: 4,
             cursor: 'pointer',
-            fontSize: 'clamp(11px, 1.6vw, 15px)',
+            fontSize: 'clamp(10px, 2.5vw, 15px)',
             fontFamily: "'Cinzel', serif",
             fontWeight: 700,
-            letterSpacing: '0.3em',
+            letterSpacing: 'clamp(0.1em, 0.3em, 0.3em)',
             color: '#1a0508',
             boxShadow: '0 0 30px rgba(244,197,66,0.5), 0 0 60px rgba(244,197,66,0.2), inset 0 1px 0 rgba(255,255,255,0.3)',
             textTransform: 'uppercase',
             transition: 'transform 0.15s, box-shadow 0.15s',
+            minWidth: 'clamp(180px, 55vw, 260px)',
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
           }}
           onMouseEnter={e => {
             e.currentTarget.style.transform = 'scale(1.06)';
@@ -549,7 +563,7 @@ const IntroSequence = ({ onFinish }) => {
             e.currentTarget.style.boxShadow = '0 0 30px rgba(244,197,66,0.5), 0 0 60px rgba(244,197,66,0.2), inset 0 1px 0 rgba(255,255,255,0.3)';
           }}
         >
-          ⚽ ENTER CHALLENGE
+          ⚽ ENTERING CHALLENGE
         </button>
       </div>
 
@@ -557,18 +571,22 @@ const IntroSequence = ({ onFinish }) => {
       <button
         onClick={onFinish}
         style={{
-          position: 'absolute', top: 20, right: 20, zIndex: 100,
+          position: 'absolute', top: 16, right: 16, zIndex: 100,
           background: 'rgba(255,255,255,0.06)',
           border: '1px solid rgba(244,197,66,0.25)',
           borderRadius: 3,
           color: 'rgba(255,255,255,0.45)',
-          padding: '6px 18px',
-          fontSize: 10,
+          padding: 'clamp(5px,1vh,8px) clamp(12px,3vw,18px)',
+          fontSize: 'clamp(9px, 2vw, 11px)',
           letterSpacing: '0.25em',
           textTransform: 'uppercase',
           cursor: 'pointer',
           fontFamily: "'Raleway', sans-serif",
           transition: 'color 0.2s, border-color 0.2s',
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          minWidth: 60,
+          minHeight: 36,
         }}
         onMouseEnter={e => {
           e.currentTarget.style.color = '#F4C542';
@@ -590,7 +608,11 @@ const IntroSequence = ({ onFinish }) => {
 function clampSize(min, max) {
   if (typeof window === 'undefined') return max;
   const vw = window.innerWidth;
-  return Math.min(max, Math.max(min, Math.round(vw * 0.09)));
+  const vh = window.innerHeight;
+  /* on small screens use vh too so it never overflows vertically */
+  const byW = Math.round(vw * 0.09);
+  const byH = Math.round(vh * 0.11);
+  return Math.min(max, Math.max(min, Math.min(byW, byH)));
 }
 
 export default IntroSequence;
