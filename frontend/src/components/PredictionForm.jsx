@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import api from '../api';
@@ -104,13 +104,25 @@ const ScoreStepper = ({ team, value, onChange, isWinner }) => (
         <ChevronUp size={20} color="#F4C542" />
       </button>
 
-      <input
-        type="number"
-        min="0"
-        value={value === '' ? '' : value}
-        onChange={e => onChange(e.target.value === '' ? '' : parseInt(e.target.value))}
-        className="score-input"
-      />
+      <div className="relative flex justify-center w-full">
+        <input
+          type="number"
+          min="0"
+          value={value === '' ? '' : value}
+          onChange={e => onChange(e.target.value === '' ? '' : parseInt(e.target.value))}
+          className="score-input"
+        />
+        {value === '' && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span 
+              className="text-[10px] sm:text-xs font-black uppercase text-center leading-tight tracking-[0.1em]" 
+              style={{ color: 'rgba(244,197,66,0.35)', textShadow: 'none' }}
+            >
+              Enter<br/>Score
+            </span>
+          </div>
+        )}
+      </div>
 
       <button
         type="button"
@@ -127,6 +139,19 @@ const ScoreStepper = ({ team, value, onChange, isWinner }) => (
 // ─── Main PredictionForm ──────────────────────────────────────
 const PredictionForm = () => {
   const [step, setStep] = useState(1);
+  const [predictionsOpen, setPredictionsOpen] = useState(true);
+  const [checkingStatus, setCheckingStatus] = useState(true);
+
+  useEffect(() => {
+    api.get('/predictions/status')
+      .then(res => {
+        if (res.data && res.data.predictionsOpen !== undefined) {
+          setPredictionsOpen(res.data.predictionsOpen);
+        }
+      })
+      .catch(err => console.error('Failed to fetch prediction status', err))
+      .finally(() => setCheckingStatus(false));
+  }, []);
   const [formData, setFormData] = useState(() => {
     const saved = localStorage.getItem('predictionFormData');
     if (saved) { try { return JSON.parse(saved); } catch (e) {} }
@@ -211,8 +236,54 @@ const PredictionForm = () => {
   };
 
   // ─────────────────────────────────────────────────────────────
-  // SUCCESS SCREEN
+  // STATUS & SUCCESS SCREENS
   // ─────────────────────────────────────────────────────────────
+  if (checkingStatus) {
+    return (
+      <section id="prediction-section" className="py-20 px-4 flex items-center justify-center min-h-[50vh]">
+        <div className="text-center">
+          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} className="w-12 h-12 border-4 border-t-[#F4C542] border-r-[#F4C542] border-b-transparent border-l-transparent rounded-full mx-auto mb-4" />
+          <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Loading...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!predictionsOpen) {
+    return (
+      <section id="prediction-section" className="py-20 px-4 flex items-center justify-center min-h-[50vh]">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="glass-card rounded-3xl p-8 sm:p-12 max-w-lg w-full text-center relative overflow-hidden"
+          style={{ border: '1px solid rgba(244,197,66,0.2)', boxShadow: '0 0 60px rgba(0,0,0,0.8)' }}
+        >
+          <div className="text-6xl mb-6 drop-shadow-[0_0_20px_rgba(244,197,66,0.4)]">⏳</div>
+          <h2 className="text-2xl sm:text-3xl font-black mb-3" style={{ color: '#F4C542' }}>
+            PREDICTIONS ARE OVER
+          </h2>
+          <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-8">
+            The prediction window has officially closed. Thank you to everyone who participated!
+          </p>
+          <button
+            onClick={() => {
+              const el = document.getElementById('leaderboard-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="w-full py-3 rounded-xl font-black text-sm transition-all hover:scale-[1.02] active:scale-95"
+            style={{
+              background: 'linear-gradient(135deg,#F9E2AE,#F4C542,#c9920a)',
+              color: '#1A0810',
+              boxShadow: '0 0 20px rgba(244,197,66,0.3)',
+            }}
+          >
+            View Leaderboard ↓
+          </button>
+        </motion.div>
+      </section>
+    );
+  }
+
   if (isSuccess) {
     return (
       <section id="prediction-section" className="py-20 px-4 flex items-center justify-center min-h-[70vh]">

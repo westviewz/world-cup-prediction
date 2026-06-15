@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const settingsSchema = new mongoose.Schema({
+  predictionsOpen: { type: Boolean, default: true },
   leaderboardUnlocked: { type: Boolean, default: false },
   pointsWinner: { type: Number, default: 50 },
   pointsRunnerUp: { type: Number, default: 30 },

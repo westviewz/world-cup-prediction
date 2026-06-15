@@ -11,8 +11,8 @@ const Footer = () => (
         <span className="text-2xl">⚽</span>
         <span className="font-black text-lg" style={{ color: '#F4C542' }}>FIFA World Cup 2026</span>
       </div>
-      <p className="text-gray-500 text-sm mb-1">Prediction Challenge — Compete with football fans worldwide</p>
-      <p className="text-gray-600 text-xs">Fan-made prediction contest. Not affiliated with FIFA.</p>
+      <p className="text-gray-500 text-sm mb-1">Prediction Challenge</p>
+      <p className="text-gray-600 text-xs">Fan-made prediction contest conducted by Football Gramam. Not affiliated with FIFA.</p>
     </div>
   </footer>
 );

@@ -3,9 +3,27 @@ const router = express.Router();
 const Prediction = require('../models/Prediction');
 const Settings = require('../models/Settings');
 
+// Get public status
+router.get('/status', async (req, res) => {
+  try {
+    let settings = await Settings.findOne();
+    if (!settings) settings = await Settings.create({});
+    res.json({ predictionsOpen: settings.predictionsOpen });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Create a new prediction
 router.post('/', async (req, res) => {
   try {
+    let settings = await Settings.findOne();
+    if (!settings) settings = await Settings.create({});
+    if (!settings.predictionsOpen) {
+      return res.status(403).json({ error: 'Predictions are closed.' });
+    }
+
     const { name, phone, winner, runnerUp, winnerGoals, runnerUpGoals } = req.body;
 
     // Validation

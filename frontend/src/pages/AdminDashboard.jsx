@@ -64,6 +64,7 @@ const AdminDashboard = () => {
   });
   const [predictions, setPredictions] = useState([]);
   const [settings, setSettings] = useState({
+    predictionsOpen: true,
     leaderboardUnlocked: false,
     actualWinner: '',
     actualRunnerUp: '',
@@ -229,21 +230,49 @@ const AdminDashboard = () => {
               </h2>
 
               <form onSubmit={handleUpdateSettings} className="space-y-4">
-                {/* Toggle */}
-                <div
-                  className="flex items-center justify-between p-3.5 rounded-xl"
-                  style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}
-                >
-                  <span className="font-semibold text-sm">Leaderboard Visible</span>
-                  <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                    <input
-                      type="checkbox"
-                      checked={settings.leaderboardUnlocked}
-                      onChange={e => setSettings({ ...settings, leaderboardUnlocked: e.target.checked })}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-wc-gold" />
-                  </label>
+                {/* Toggles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div
+                    className="flex items-center justify-between p-3.5 rounded-xl"
+                    style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}
+                  >
+                    <span className="font-semibold text-sm">Accepting Predictions</span>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settings.predictionsOpen}
+                        onChange={async e => {
+                          const val = e.target.checked;
+                          const newSettings = { ...settings, predictionsOpen: val };
+                          setSettings(newSettings);
+                          try { await api.put('/admin/settings', newSettings); } catch (err) { alert('Error updating settings'); }
+                        }}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-wc-gold" />
+                    </label>
+                  </div>
+
+                  <div
+                    className="flex items-center justify-between p-3.5 rounded-xl"
+                    style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}
+                  >
+                    <span className="font-semibold text-sm">Leaderboard Visible</span>
+                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                      <input
+                        type="checkbox"
+                        checked={settings.leaderboardUnlocked}
+                        onChange={async e => {
+                          const val = e.target.checked;
+                          const newSettings = { ...settings, leaderboardUnlocked: val };
+                          setSettings(newSettings);
+                          try { await api.put('/admin/settings', newSettings); } catch (err) { alert('Error updating settings'); }
+                        }}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-wc-gold" />
+                    </label>
+                  </div>
                 </div>
 
                 {/* Actual results */}

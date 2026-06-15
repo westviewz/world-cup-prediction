@@ -148,9 +148,10 @@ router.get('/settings', auth, async (req, res) => {
 // Update Settings
 router.put('/settings', auth, async (req, res) => {
   try {
-    const { leaderboardUnlocked, pointsWinner, pointsRunnerUp, pointsExactScore, pointsGoalDiff, actualWinner, actualRunnerUp, actualWinnerGoals, actualRunnerUpGoals } = req.body;
+    const { predictionsOpen, leaderboardUnlocked, pointsWinner, pointsRunnerUp, pointsExactScore, pointsGoalDiff, actualWinner, actualRunnerUp, actualWinnerGoals, actualRunnerUpGoals } = req.body;
     let settings = await Settings.findOne();
     
+    settings.predictionsOpen = predictionsOpen !== undefined ? predictionsOpen : settings.predictionsOpen;
     settings.leaderboardUnlocked = leaderboardUnlocked !== undefined ? leaderboardUnlocked : settings.leaderboardUnlocked;
     settings.pointsWinner = pointsWinner !== undefined ? pointsWinner : settings.pointsWinner;
     settings.pointsRunnerUp = pointsRunnerUp !== undefined ? pointsRunnerUp : settings.pointsRunnerUp;

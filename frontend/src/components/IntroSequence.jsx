@@ -126,24 +126,8 @@ const FloodLight = ({ style, delay, id }) => (
   </div>
 );
 
-/* ─── Letter-by-letter text ─────────────────────────── */
-const RevealText = ({ text, className, style, id, charDelay = 0.08 }) => (
-  <span id={id} className={className} style={{ ...style, display: 'inline-block' }}>
-    {text.split('').map((ch, i) => (
-      <span
-        key={i}
-        className={`intro-letter-${id}-${i}`}
-        style={{
-          display: 'inline-block',
-          opacity: 0,
-          whiteSpace: ch === ' ' ? 'pre' : 'normal',
-        }}
-      >
-        {ch}
-      </span>
-    ))}
-  </span>
-);
+/* ─── Letter-by-letter text (Removed for cinematic reveal) ─── */
+// The RevealText component has been removed as the text is now revealed all at once.
 
 /* ─── Trophy SVG ─────────────────────────────────────── */
 const TrophySVG = ({ size = 110 }) => (
@@ -234,27 +218,29 @@ const IntroSequence = ({ onFinish }) => {
       tl.to(id, { opacity: 1, duration: 0.5, ease: 'power2.out' }, `+=${0.25 + i * 0.3}`);
     });
 
-    /* presented by */
-    tl.fromTo('#presented-by', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '+=0.2');
-
-    /* ── SCENE 2: FOOTBALL GRAMAM letter reveal ──────── */
-    tl.to('#presented-by', { opacity: 0, duration: 0.2 }, '+=0.25');
+    /* ── SCENE 2: FOOTBALL GRAMAM cinematic reveal ──────── */
     tl.set('#brand-wrap', { opacity: 1 });
 
-    /* gold sweep mask */
-    tl.fromTo('#gold-sweep', { x: '-110%' }, { x: '110%', duration: 0.85, ease: 'power2.inOut' }, '<');
+    /* gold sweep mask representing the projector beam */
+    tl.fromTo('#gold-sweep', { x: '-110%' }, { x: '110%', duration: 1.5, ease: 'power2.inOut' }, '<');
 
-    /* reveal letters */
-    const brandLetters = document.querySelectorAll('[class^="intro-letter-brand"]');
-    brandLetters.forEach((el, i) => {
-      tl.to(el, { opacity: 1, y: 0, duration: 0.04, ease: 'power1.out' }, `<+=${i * 0.028}`);
-    });
+    /* reveal brand text all at once, blooming from the light */
+    tl.fromTo('#brand-text', 
+      { opacity: 0, scale: 1.05, filter: 'blur(10px)' }, 
+      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power2.out' }, 
+      '<'
+    );
 
-    /* glow pulse on brand */
+    /* intense glow pulse on brand as the beam crosses the center */
     tl.to('#brand-text', {
-      textShadow: '0 0 40px rgba(244,197,66,0.9), 0 0 80px rgba(244,197,66,0.5)',
-      duration: 0.35, ease: 'power2.out',
-    }, '>-0.2');
+      textShadow: '0 0 50px rgba(244,197,66,1), 0 0 100px rgba(244,197,66,0.8), 0 0 150px rgba(244,197,66,0.6)',
+      duration: 0.5, ease: 'power2.out',
+    }, '<0.3');
+    
+    tl.to('#brand-text', {
+      textShadow: '0 0 20px rgba(244,197,66,0.4)',
+      duration: 0.8, ease: 'power2.inOut',
+    }, '>');
 
     /* fade in subtext */
     tl.fromTo('#brand-presents', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, '+=0.1');
@@ -292,15 +278,22 @@ const IntroSequence = ({ onFinish }) => {
       { opacity: 1, scale: 1, duration: 0.4, ease: 'power4.out' }, '<')
       .to('#lens-flare', { opacity: 0, scale: 1.6, duration: 0.5 }, '>');
 
-    /* hold then zoom out */
-    tl.to('#intro-root', { opacity: 0, scale: 1.05, duration: 0.7, ease: 'power2.inOut' }, '+=1.5');
+    /* hold then fly into the page */
+    tl.to('#intro-root', { opacity: 0, scale: 3, filter: 'blur(10px)', duration: 0.8, ease: 'power3.in' }, '+=2.5');
 
     return () => tl.kill();
   }, []);
 
-  /* ── CTA button: click → finish immediately ── */
+  /* ── CTA button: click → fly into the page ── */
   const handleEnter = () => {
-    gsap.to('#intro-root', { opacity: 0, duration: 0.5, onComplete: onFinish });
+    gsap.to('#intro-root', { 
+      opacity: 0, 
+      scale: 3, 
+      filter: 'blur(10px)', 
+      duration: 0.8, 
+      ease: 'power3.in', 
+      onComplete: onFinish 
+    });
   };
 
   const { w, h } = dims;
@@ -369,23 +362,7 @@ const IntroSequence = ({ onFinish }) => {
         }}
       />
 
-      {/* ── PRESENTED BY ── */}
-      <div
-        id="presented-by"
-        style={{
-          position: 'absolute', top: 'clamp(28%, 30%, 32%)', left: 0, right: 0,
-          textAlign: 'center', opacity: 0, zIndex: 30,
-          letterSpacing: '0.35em',
-          fontSize: 'clamp(8px, 2.5vw, 13px)',
-          color: 'rgba(244,197,66,0.75)',
-          fontFamily: "'Raleway', sans-serif",
-          fontWeight: 300,
-          textTransform: 'uppercase',
-          padding: '0 8px',
-        }}
-      >
-        PRESENTED BY
-      </div>
+
 
       {/* ── BRAND WRAP ── */}
       <div
@@ -425,7 +402,7 @@ const IntroSequence = ({ onFinish }) => {
             wordBreak: 'keep-all',
           }}
         >
-          <RevealText text="FOOTBALL GRAMAM" id="brand" />
+          FOOTBALL GRAMAM
         </div>
 
         {/* presents */}

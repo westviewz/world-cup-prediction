@@ -59,9 +59,8 @@ const Hero = ({ onPredictClick }) => {
       {/* Stadium Background */}
       <div
         ref={bgRef}
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-no-repeat hero-bg-image"
         style={{
-          backgroundImage: "url('/hero-bg.jpg')",
           height: '130%',
           top: '-15%',
           backgroundPosition: 'center top',

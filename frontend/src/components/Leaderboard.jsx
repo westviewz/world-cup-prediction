@@ -120,7 +120,7 @@ const Leaderboard = () => {
       <div className="section-divider" />
 
       {/* ── Leaderboard ── */}
-      <section className="py-16 px-4 relative overflow-hidden">
+      <section id="leaderboard-section" className="py-16 px-4 relative overflow-hidden">
         {/* Stadium BG glow */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-wc-gold/5 blur-3xl rounded-full" />
