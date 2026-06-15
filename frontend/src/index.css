@@ -245,12 +245,12 @@
 
 /* --- Hero Background Responsive --- */
 .hero-bg-image {
-  background-image: url('/mobile-hero-bg.jpg');
+  background-image: url('/mobile-hero-bg.webp');
 }
 
 @media (min-width: 768px) {
   .hero-bg-image {
-    background-image: url('/desktop-hero-bg.jpg');
+    background-image: url('/desktop-hero-bg.webp');
   }
 }
 
