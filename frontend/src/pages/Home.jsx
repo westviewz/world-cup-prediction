@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Hero from '../components/Hero';
 import PredictionForm from '../components/PredictionForm';
 import Leaderboard from '../components/Leaderboard';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 // Footer
-const Footer = () => (
-  <footer className="py-10 px-4 text-center border-t" style={{ borderColor: 'rgba(244,197,66,0.1)' }}>
-    <div className="max-w-3xl mx-auto">
-      <div className="flex justify-center items-center gap-2 mb-3">
-        <span className="text-2xl">⚽</span>
-        <span className="font-black text-lg" style={{ color: '#F4C542' }}>FIFA World Cup 2026</span>
+const Footer = () => {
+  return (
+    <footer className="py-10 px-4 text-center border-t" style={{ borderColor: 'rgba(244,197,66,0.1)' }}>
+      <div className="max-w-3xl mx-auto">
+        <div className="flex justify-center items-center gap-2 mb-3">
+          <span className="text-2xl">⚽</span>
+          <span className="font-black text-lg" style={{ color: '#F4C542' }}>FIFA World Cup 2026</span>
+        </div>
+        <p className="text-gray-500 text-sm mb-1">Prediction Challenge</p>
+        <p className="text-gray-600 text-xs">Fan-made prediction contest conducted by Football Gramam.Not affiliated with FIFA.</p>
       </div>
-      <p className="text-gray-500 text-sm mb-1">Prediction Challenge</p>
-      <p className="text-gray-600 text-xs">Fan-made prediction contest conducted by Football Gramam. Not affiliated with FIFA.</p>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 const Home = () => {
   const [showForm, setShowForm] = useState(() => {
@@ -31,6 +35,7 @@ const Home = () => {
 
   return (
     <main style={{ background: 'linear-gradient(180deg, #0D0507 0%, #1A0810 30%, #0D0507 60%, #0D0507 100%)' }}>
+      <LanguageSwitcher />
       <Hero onPredictClick={handlePredictClick} />
 
       {/* Prediction Form */}

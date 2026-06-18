@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 import api from '../api';
 import { teams, teamCodes } from '../utils/teams';
 import { User, Phone, Trophy, ChevronUp, ChevronDown, CheckCircle2, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // ─── Flag Image ───────────────────────────────────────────────
 const Flag = ({ team, className = 'w-8 h-auto' }) => {
@@ -13,15 +14,14 @@ const Flag = ({ team, className = 'w-8 h-auto' }) => {
     : null;
 };
 
-// ─── Stepper ─────────────────────────────────────────────────
 const steps = [
-  { num: 1, icon: '👤', label: 'Details' },
-  { num: 2, icon: '🏆', label: 'Winner' },
-  { num: 3, icon: '🥈', label: 'Runner-up' },
-  { num: 4, icon: '🎯', label: 'Score' },
+  { num: 1, icon: '👤', key: 'step1_label' },
+  { num: 2, icon: '🏆', key: 'step2_label' },
+  { num: 3, icon: '🥈', key: 'step3_label' },
+  { num: 4, icon: '🎯', key: 'step4_label' },
 ];
 
-const StepIndicator = ({ step }) => (
+const StepIndicator = ({ step, t }) => (
   <div className="flex items-center w-full mb-10">
     {steps.map((s, idx) => (
       <React.Fragment key={s.num}>
@@ -52,7 +52,7 @@ const StepIndicator = ({ step }) => (
             {step > s.num ? '✓' : s.icon}
           </motion.div>
           <span className={`text-[10px] font-semibold tracking-wide hidden sm:block ${step >= s.num ? 'text-wc-champagne' : 'text-gray-600'}`}>
-            {s.label}
+            {t(`form.${s.key}`)}
           </span>
         </div>
         {idx < steps.length - 1 && (
@@ -71,7 +71,7 @@ const StepIndicator = ({ step }) => (
 );
 
 // ─── Score stepper ────────────────────────────────────────────
-const ScoreStepper = ({ team, value, onChange, isWinner }) => (
+const ScoreStepper = ({ team, value, onChange, isWinner, t }) => (
   <div className="flex flex-col items-center gap-3">
     {/* Team card */}
     <div
@@ -89,7 +89,7 @@ const ScoreStepper = ({ team, value, onChange, isWinner }) => (
       <Flag team={team} className="w-12 sm:w-16 h-auto rounded-lg shadow-lg" />
       <span className="text-[10px] sm:text-xs font-bold text-white text-center leading-tight break-words max-w-full">{team}</span>
       <span className="text-[8px] font-black uppercase tracking-widest" style={{ color: isWinner ? '#F4C542' : '#9ca3af' }}>
-        {isWinner ? 'WINNER' : 'RUNNER-UP'}
+        {isWinner ? t('form.winner_badge') : t('form.runner_badge')}
       </span>
     </div>
 
@@ -118,7 +118,7 @@ const ScoreStepper = ({ team, value, onChange, isWinner }) => (
               className="text-[10px] sm:text-xs font-black uppercase text-center leading-tight tracking-[0.1em]" 
               style={{ color: 'rgba(244,197,66,0.35)', textShadow: 'none' }}
             >
-              Enter<br/>Score
+              {t('form.enter_score').split(' ').map((word, i) => <React.Fragment key={i}>{word}<br/></React.Fragment>)}
             </span>
           </div>
         )}
@@ -138,6 +138,7 @@ const ScoreStepper = ({ team, value, onChange, isWinner }) => (
 
 // ─── Main PredictionForm ──────────────────────────────────────
 const PredictionForm = () => {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [predictionsOpen, setPredictionsOpen] = useState(true);
   const [checkingStatus, setCheckingStatus] = useState(true);
@@ -168,13 +169,13 @@ const PredictionForm = () => {
   const handleNext = () => {
     setError('');
     if (step === 1) {
-      if (!formData.name || !formData.phone) return setError('Please fill in all fields.');
-      if (!/^\d{10}$/.test(formData.phone))  return setError('Phone number must be exactly 10 digits.');
+      if (!formData.name || !formData.phone) return setError(t('form.err_all_fields'));
+      if (!/^\d{10}$/.test(formData.phone))  return setError(t('form.err_phone'));
     }
-    if (step === 2 && !formData.winner) return setError('Please select a winning team.');
+    if (step === 2 && !formData.winner) return setError(t('form.err_winner'));
     if (step === 3) {
-      if (!formData.runnerUp)                          return setError('Please select a runner-up team.');
-      if (formData.winner === formData.runnerUp)       return setError('Winner and Runner-up must be different teams.');
+      if (!formData.runnerUp)                          return setError(t('form.err_runner'));
+      if (formData.winner === formData.runnerUp)       return setError(t('form.err_different'));
     }
     setTeamSearch('');
     setStep(s => s + 1);
@@ -187,9 +188,9 @@ const PredictionForm = () => {
     e.preventDefault();
     setError('');
     if (formData.winnerGoals === '' || formData.runnerUpGoals === '')
-      return setError('Please enter goals for both teams.');
+      return setError(t('form.err_goals'));
     if (Number(formData.winnerGoals) <= Number(formData.runnerUpGoals))
-      return setError('Winner goals must be greater than Runner-up goals.');
+      return setError(t('form.err_goals_greater'));
 
     setIsSubmitting(true);
     try {
@@ -243,7 +244,7 @@ const PredictionForm = () => {
       <section id="prediction-section" className="py-20 px-4 flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
           <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} className="w-12 h-12 border-4 border-t-[#F4C542] border-r-[#F4C542] border-b-transparent border-l-transparent rounded-full mx-auto mb-4" />
-          <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Loading...</p>
+          <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">{t('form.loading')}</p>
         </div>
       </section>
     );
@@ -260,10 +261,10 @@ const PredictionForm = () => {
         >
           <div className="text-6xl mb-6 drop-shadow-[0_0_20px_rgba(244,197,66,0.4)]">⏳</div>
           <h2 className="text-2xl sm:text-3xl font-black mb-3" style={{ color: '#F4C542' }}>
-            PREDICTIONS ARE OVER
+            {t('form.closed_title')}
           </h2>
           <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-8">
-            The prediction window has officially closed. Thank you to everyone who participated!
+            {t('form.closed_desc')}
           </p>
           <button
             onClick={() => {
@@ -277,7 +278,7 @@ const PredictionForm = () => {
               boxShadow: '0 0 20px rgba(244,197,66,0.3)',
             }}
           >
-            View Leaderboard ↓
+            {t('form.view_leaderboard')}
           </button>
         </motion.div>
       </section>
@@ -311,35 +312,35 @@ const PredictionForm = () => {
             background: 'linear-gradient(135deg,#F9E2AE,#F4C542)',
             WebkitBackgroundClip: 'text', color: 'transparent'
           }}>
-            Prediction Submitted!
+            {t('form.success_title')}
           </h2>
           <p className="text-gray-400 mb-8 text-sm sm:text-base leading-relaxed">
-            Your prediction is locked until the World Cup Final.<br/>Check back to see where you rank!
+            {t('form.success_desc').split('. ').map((s, i) => <React.Fragment key={i}>{s}{i===0 && '. '}<br/></React.Fragment>)}
           </p>
 
           {/* Summary card */}
           <div className="text-left rounded-2xl p-5 space-y-3 mb-8"
             style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <div className="flex items-center justify-between py-1 border-b border-white/5">
-              <span className="text-gray-400 text-sm">Name</span>
+              <span className="text-gray-400 text-sm">{t('form.summary_name')}</span>
               <span className="font-bold text-white">{formData.name}</span>
             </div>
             <div className="flex items-center justify-between py-1 border-b border-white/5">
-              <span className="text-gray-400 text-sm">Winner</span>
+              <span className="text-gray-400 text-sm">{t('form.summary_winner')}</span>
               <span className="flex items-center gap-2 font-bold" style={{ color: '#F4C542' }}>
                 <Flag team={formData.winner} className="w-6 h-auto rounded" />
                 {formData.winner}
               </span>
             </div>
             <div className="flex items-center justify-between py-1 border-b border-white/5">
-              <span className="text-gray-400 text-sm">Runner-up</span>
+              <span className="text-gray-400 text-sm">{t('form.summary_runner')}</span>
               <span className="flex items-center gap-2 font-bold text-wc-muted">
                 <Flag team={formData.runnerUp} className="w-6 h-auto rounded grayscale opacity-70" />
                 {formData.runnerUp}
               </span>
             </div>
             <div className="flex items-center justify-between py-1">
-              <span className="text-gray-400 text-sm">Predicted Score</span>
+              <span className="text-gray-400 text-sm">{t('form.summary_score')}</span>
               <span className="font-black text-lg" style={{ color: '#F4C542' }}>
                 {formData.winnerGoals} – {formData.runnerUpGoals}
               </span>
@@ -351,7 +352,7 @@ const PredictionForm = () => {
             className="w-full py-3 rounded-2xl font-bold text-sm transition-all hover:scale-[1.02] active:scale-95"
             style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}
           >
-            Log Out / Reset Prediction
+            {t('form.reset')}
           </button>
         </motion.div>
       </section>
@@ -378,8 +379,8 @@ const PredictionForm = () => {
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <p className="text-xs font-bold tracking-[0.25em] uppercase mb-2" style={{ color: '#F4C542' }}>PREDICTION CENTRE</p>
-          <h2 className="text-3xl sm:text-4xl font-black text-white">Make Your Prediction</h2>
+          <p className="text-xs font-bold tracking-[0.25em] uppercase mb-2" style={{ color: '#F4C542' }}>{t('form.centre')}</p>
+          <h2 className="text-3xl sm:text-4xl font-black text-white">{t('form.make_prediction')}</h2>
         </motion.div>
 
         {/* Glass card */}
@@ -390,7 +391,7 @@ const PredictionForm = () => {
           transition={{ delay: 0.1 }}
           className="glass-card rounded-3xl p-6 sm:p-10"
         >
-          <StepIndicator step={step} />
+          <StepIndicator step={step} t={t} />
 
           {/* Error */}
           <AnimatePresence>
@@ -415,7 +416,7 @@ const PredictionForm = () => {
               {/* ── Step 1: Personal Details ── */}
               {step === 1 && (
                 <motion.div key="s1" variants={slideVariants} initial="initial" animate="animate" exit="exit" className="space-y-5">
-                  <h3 className="text-xl font-black mb-5" style={{ color: '#F4C542' }}>⚽ Personal Details</h3>
+                  <h3 className="text-xl font-black mb-5" style={{ color: '#F4C542' }}>⚽ {t('form.personal_details')}</h3>
 
                   {/* Name */}
                   <div className="relative group">
@@ -426,7 +427,7 @@ const PredictionForm = () => {
                       type="text"
                       value={formData.name}
                       onChange={e => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Full Name"
+                      placeholder={t('form.full_name')}
                       className="w-full pl-12 pr-4 py-4 rounded-xl text-white placeholder-gray-500 focus:outline-none transition-all text-base font-medium"
                       style={{
                         background: 'rgba(0,0,0,0.5)',
@@ -446,7 +447,7 @@ const PredictionForm = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="Phone Number (10 digits)"
+                      placeholder={t('form.phone')}
                       className="w-full pl-12 pr-4 py-4 rounded-xl text-white placeholder-gray-500 focus:outline-none transition-all text-base font-medium"
                       style={{
                         background: 'rgba(0,0,0,0.5)',
@@ -462,7 +463,7 @@ const PredictionForm = () => {
               {/* ── Step 2: Choose Winner ── */}
               {step === 2 && (
                 <motion.div key="s2" variants={slideVariants} initial="initial" animate="animate" exit="exit" className="space-y-4">
-                  <h3 className="text-xl font-black mb-1" style={{ color: '#F4C542' }}>🏆 Choose World Cup Winner</h3>
+                  <h3 className="text-xl font-black mb-1" style={{ color: '#F4C542' }}>🏆 {t('form.choose_winner')}</h3>
 
                   {/* Search */}
                   <div className="relative">
@@ -471,7 +472,7 @@ const PredictionForm = () => {
                       type="text"
                       value={teamSearch}
                       onChange={e => setTeamSearch(e.target.value)}
-                      placeholder="Search countries..."
+                      placeholder={t('form.search')}
                       className="w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-gray-500 focus:outline-none text-sm transition-all"
                       style={{
                         background: 'rgba(0,0,0,0.5)',
@@ -506,7 +507,7 @@ const PredictionForm = () => {
                       </button>
                     ))}
                     {filteredTeams.length === 0 && (
-                      <div className="col-span-full py-10 text-center text-gray-500 text-sm">No countries found.</div>
+                      <div className="col-span-full py-10 text-center text-gray-500 text-sm">{t('form.no_countries')}</div>
                     )}
                   </div>
                 </motion.div>
@@ -515,7 +516,7 @@ const PredictionForm = () => {
               {/* ── Step 3: Choose Runner-up ── */}
               {step === 3 && (
                 <motion.div key="s3" variants={slideVariants} initial="initial" animate="animate" exit="exit" className="space-y-4">
-                  <h3 className="text-xl font-black mb-1" style={{ color: '#F4C542' }}>🥈 Choose Runner-up</h3>
+                  <h3 className="text-xl font-black mb-1" style={{ color: '#F4C542' }}>🥈 {t('form.choose_runner')}</h3>
 
                   {/* Search */}
                   <div className="relative">
@@ -524,7 +525,7 @@ const PredictionForm = () => {
                       type="text"
                       value={teamSearch}
                       onChange={e => setTeamSearch(e.target.value)}
-                      placeholder="Search countries..."
+                      placeholder={t('form.search')}
                       className="w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-gray-500 focus:outline-none text-sm transition-all"
                       style={{
                         background: 'rgba(0,0,0,0.5)',
@@ -560,7 +561,7 @@ const PredictionForm = () => {
                       </button>
                     ))}
                     {filteredTeams.length === 0 && (
-                      <div className="col-span-full py-10 text-center text-gray-500 text-sm">No countries found.</div>
+                      <div className="col-span-full py-10 text-center text-gray-500 text-sm">{t('form.no_countries')}</div>
                     )}
                   </div>
                 </motion.div>
@@ -569,7 +570,7 @@ const PredictionForm = () => {
               {/* ── Step 4: Final Score ── */}
               {step === 4 && (
                 <motion.div key="s4" variants={slideVariants} initial="initial" animate="animate" exit="exit">
-                  <h3 className="text-xl font-black mb-6 text-center" style={{ color: '#F4C542' }}>🎯 Predict the Final Score</h3>
+                  <h3 className="text-xl font-black mb-6 text-center" style={{ color: '#F4C542' }}>🎯 {t('form.predict_score')}</h3>
 
                   <div className="flex flex-row items-center justify-center gap-2 sm:gap-6">
                     {/* Winner */}
@@ -578,6 +579,7 @@ const PredictionForm = () => {
                       value={formData.winnerGoals}
                       onChange={v => setFormData({ ...formData, winnerGoals: v })}
                       isWinner={true}
+                      t={t}
                     />
 
                     {/* VS Divider */}
@@ -596,6 +598,7 @@ const PredictionForm = () => {
                       value={formData.runnerUpGoals}
                       onChange={v => setFormData({ ...formData, runnerUpGoals: v })}
                       isWinner={false}
+                      t={t}
                     />
                   </div>
                 </motion.div>
@@ -613,7 +616,7 @@ const PredictionForm = () => {
                 className="px-6 py-3 rounded-2xl font-semibold text-sm transition-all hover:scale-[1.02] active:scale-95"
                 style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', color: '#d1d5db' }}
               >
-                ← Back
+                {t('form.back')}
               </button>
             ) : <div />}
 
@@ -628,7 +631,7 @@ const PredictionForm = () => {
                   boxShadow: '0 0 25px rgba(244,197,66,0.4)',
                 }}
               >
-                Continue →
+                {t('form.continue')}
               </button>
             ) : (
               <button
@@ -642,7 +645,7 @@ const PredictionForm = () => {
                   boxShadow: '0 0 25px rgba(255,107,53,0.4)',
                 }}
               >
-                {isSubmitting ? '⏳ Submitting...' : '🚀 Submit Prediction'}
+                {isSubmitting ? t('form.submitting') : t('form.submit')}
               </button>
             )}
           </div>

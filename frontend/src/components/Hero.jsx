@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +29,7 @@ const FlagBadge = ({ team, code, style }) => (
 );
 
 const Hero = ({ onPredictClick }) => {
+  const { t } = useTranslation();
   const bgRef  = useRef(null);
   const titleRef = useRef(null);
 
@@ -136,8 +138,8 @@ const Hero = ({ onPredictClick }) => {
           className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-4 tracking-tight"
         >
           <span className="text-white">PREDICT THE </span>
-          <span className="shimmer-text block sm:inline">FIFA WORLD CUP</span>
-          <span className="text-white"> 2026 CHAMPION</span>
+          <span className="shimmer-text block sm:inline">ULTIMATE</span>
+          <span className="text-white"> CHAMPION</span>
         </motion.h1>
 
         {/* Subheading */}
@@ -147,7 +149,7 @@ const Hero = ({ onPredictClick }) => {
           transition={{ duration: 0.9, delay: 0.5 }}
           className="text-wc-muted/80 text-base sm:text-lg md:text-xl font-light mb-10 max-w-xl leading-relaxed"
         >
-          Choose the Winner, Runner-up and Final Score. Compete with football fans worldwide.
+          The world's greatest football tournament is here. Make your predictions, challenge your friends, and secure your place in history.
         </motion.p>
 
         {/* CTA Button */}
@@ -169,7 +171,7 @@ const Hero = ({ onPredictClick }) => {
             {/* Shine sweep */}
             <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
             <span className="relative">⚽</span>
-            <span className="relative">Make Your Prediction</span>
+            <span className="relative">{t('hero.cta_predict')}</span>
           </button>
         </motion.div>
       </div>

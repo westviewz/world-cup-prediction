@@ -94,38 +94,6 @@ const ParticleCanvas = ({ active, explode, width, height }) => {
   );
 };
 
-/* ─── Floodlight ray ─────────────────────────────────── */
-const FloodLight = ({ style, delay, id }) => (
-  <div
-    id={id}
-    style={{
-      position: 'absolute',
-      opacity: 0,
-      ...style,
-    }}
-  >
-    {/* bright bulb */}
-    <div style={{
-      width: 14, height: 14, borderRadius: '50%',
-      background: 'radial-gradient(circle, #fff 30%, #F4C542 70%, transparent 100%)',
-      boxShadow: '0 0 30px 12px rgba(244,197,66,0.9), 0 0 60px 30px rgba(244,197,66,0.4)',
-      position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-    }} />
-    {/* cone beam — narrower on mobile */}
-    <div style={{
-      position: 'absolute',
-      top: 12,
-      left: '50%',
-      transform: 'translateX(-50%)',
-      width: 0, height: 0,
-      borderLeft:  'clamp(40px, 6vw, 90px) solid transparent',
-      borderRight: 'clamp(40px, 6vw, 90px) solid transparent',
-      borderTop:   'clamp(130px, 18vh, 260px) solid rgba(244,197,66,0.07)',
-      filter: 'blur(12px)',
-    }} />
-  </div>
-);
-
 /* ─── Letter-by-letter text (Removed for cinematic reveal) ─── */
 // The RevealText component has been removed as the text is now revealed all at once.
 
@@ -212,12 +180,6 @@ const IntroSequence = ({ onFinish }) => {
     /* ambient haze */
     tl.to('#scene-haze', { opacity: 1, duration: 1.1, ease: 'power2.inOut' });
 
-    /* lights pop on one by one */
-    const lights = ['#fl-1','#fl-2','#fl-3','#fl-4'];
-    lights.forEach((id, i) => {
-      tl.to(id, { opacity: 1, duration: 0.5, ease: 'power2.out' }, `+=${0.25 + i * 0.3}`);
-    });
-
     /* ── SCENE 2: FOOTBALL GRAMAM cinematic reveal ──────── */
     tl.set('#brand-wrap', { opacity: 1 });
 
@@ -269,9 +231,6 @@ const IntroSequence = ({ onFinish }) => {
     /* Brand text drifts upward (already visible) */
     tl.to('#brand-wrap', { y: -30, duration: 0.45, ease: 'power2.inOut' }, '+=0.2');
 
-    /* ── SCENE 5: CTA ───────────────────────────────── */
-    tl.fromTo('#cta-wrap', { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '+=0.2');
 
     /* subtle lens flare */
     tl.fromTo('#lens-flare', { opacity: 0, scale: 0.5 },
@@ -284,17 +243,6 @@ const IntroSequence = ({ onFinish }) => {
     return () => tl.kill();
   }, []);
 
-  /* ── CTA button: click → fly into the page ── */
-  const handleEnter = () => {
-    gsap.to('#intro-root', { 
-      opacity: 0, 
-      scale: 3, 
-      filter: 'blur(10px)', 
-      duration: 0.8, 
-      ease: 'power3.in', 
-      onComplete: onFinish 
-    });
-  };
 
   const { w, h } = dims;
 
@@ -344,11 +292,6 @@ const IntroSequence = ({ onFinish }) => {
         pointerEvents: 'none', zIndex: 2,
       }} />
 
-      {/* ── Floodlights ── */}
-      <FloodLight id="fl-1" style={{ top: -10, left: '8%'  }} delay={0} />
-      <FloodLight id="fl-2" style={{ top: -10, left: '28%' }} delay={0.3} />
-      <FloodLight id="fl-3" style={{ top: -10, right: '28%'}} delay={0.6} />
-      <FloodLight id="fl-4" style={{ top: -10, right: '8%' }} delay={0.9} />
 
       {/* ── Lens flare ── */}
       <div
@@ -488,61 +431,6 @@ const IntroSequence = ({ onFinish }) => {
         PREDICTION CHALLENGE
       </div>
 
-      {/* ── CTA ── */}
-      <div
-        id="cta-wrap"
-        style={{
-          opacity: 0, zIndex: 35, textAlign: 'center',
-          marginTop: 'clamp(16px, 3vh, 32px)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          padding: '0 16px',
-        }}
-      >
-        <p style={{
-          fontSize: 'clamp(7px, 2.2vw, 13px)',
-          letterSpacing: 'clamp(0.1em, 0.3em, 0.3em)',
-          color: 'rgba(255,255,255,0.45)',
-          fontFamily: "'Raleway', sans-serif",
-          fontWeight: 300,
-          marginBottom: 'clamp(10px, 1.8vh, 16px)',
-          textTransform: 'uppercase',
-          lineHeight: 1.6,
-        }}>
-          Choose the Winner · Runner-up · Final Score
-        </p>
-
-        <button
-          onClick={handleEnter}
-          style={{
-            padding: 'clamp(12px, 2vh, 15px) clamp(24px, 7vw, 56px)',
-            background: 'linear-gradient(135deg, #F4C542 0%, #FF6B35 100%)',
-            border: 'none',
-            borderRadius: 4,
-            cursor: 'pointer',
-            fontSize: 'clamp(10px, 2.5vw, 15px)',
-            fontFamily: "'Cinzel', serif",
-            fontWeight: 700,
-            letterSpacing: 'clamp(0.1em, 0.3em, 0.3em)',
-            color: '#1a0508',
-            boxShadow: '0 0 30px rgba(244,197,66,0.5), 0 0 60px rgba(244,197,66,0.2), inset 0 1px 0 rgba(255,255,255,0.3)',
-            textTransform: 'uppercase',
-            transition: 'transform 0.15s, box-shadow 0.15s',
-            minWidth: 'clamp(180px, 55vw, 260px)',
-            touchAction: 'manipulation',
-            WebkitTapHighlightColor: 'transparent',
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.transform = 'scale(1.06)';
-            e.currentTarget.style.boxShadow = '0 0 50px rgba(244,197,66,0.8), 0 0 100px rgba(244,197,66,0.3), inset 0 1px 0 rgba(255,255,255,0.4)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 0 30px rgba(244,197,66,0.5), 0 0 60px rgba(244,197,66,0.2), inset 0 1px 0 rgba(255,255,255,0.3)';
-          }}
-        >
-          ⚽ ENTERING CHALLENGE
-        </button>
-      </div>
 
       {/* ── Skip ── */}
       <button
