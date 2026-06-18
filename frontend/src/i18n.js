@@ -14,14 +14,14 @@ const resources = {
   }
 };
 
-const savedLanguage = localStorage.getItem('app_language') || 'en';
+const savedLanguage = localStorage.getItem('app_language') || 'ml';
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
     lng: savedLanguage, // default language
-    fallbackLng: 'en',
+    fallbackLng: 'ml',
     interpolation: {
       escapeValue: false // react already safes from xss
     }
