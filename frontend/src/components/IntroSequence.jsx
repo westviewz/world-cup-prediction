@@ -177,32 +177,14 @@ const IntroSequence = ({ onFinish }) => {
     /* ── SCENE 1: lights on ──────────────────────────── */
     tl.set('#intro-root', { opacity: 1 });
 
-    /* ambient haze */
-    tl.to('#scene-haze', { opacity: 1, duration: 1.1, ease: 'power2.inOut' });
-
     /* ── SCENE 2: FOOTBALL GRAMAM cinematic reveal ──────── */
     tl.set('#brand-wrap', { opacity: 1 });
 
-    /* gold sweep mask representing the projector beam */
-    tl.fromTo('#gold-sweep', { x: '-110%' }, { x: '110%', duration: 1.5, ease: 'power2.inOut' }, '<');
-
-    /* reveal brand text all at once, blooming from the light */
+    /* simple reveal brand text all at once */
     tl.fromTo('#brand-text', 
-      { opacity: 0, scale: 1.05, filter: 'blur(10px)' }, 
-      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power2.out' }, 
-      '<'
+      { opacity: 0, scale: 1.05 }, 
+      { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }
     );
-
-    /* intense glow pulse on brand as the beam crosses the center */
-    tl.to('#brand-text', {
-      textShadow: '0 0 50px rgba(244,197,66,1), 0 0 100px rgba(244,197,66,0.8), 0 0 150px rgba(244,197,66,0.6)',
-      duration: 0.5, ease: 'power2.out',
-    }, '<0.3');
-    
-    tl.to('#brand-text', {
-      textShadow: '0 0 20px rgba(244,197,66,0.4)',
-      duration: 0.8, ease: 'power2.inOut',
-    }, '>');
 
     /* fade in subtext */
     tl.fromTo('#brand-presents', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3 }, '+=0.1');
@@ -232,10 +214,7 @@ const IntroSequence = ({ onFinish }) => {
     tl.to('#brand-wrap', { y: -30, duration: 0.45, ease: 'power2.inOut' }, '+=0.2');
 
 
-    /* subtle lens flare */
-    tl.fromTo('#lens-flare', { opacity: 0, scale: 0.5 },
-      { opacity: 1, scale: 1, duration: 0.4, ease: 'power4.out' }, '<')
-      .to('#lens-flare', { opacity: 0, scale: 1.6, duration: 0.5 }, '>');
+
 
     /* hold then fly into the page */
     tl.to('#intro-root', { opacity: 0, scale: 3, filter: 'blur(10px)', duration: 0.8, ease: 'power3.in' }, '+=2.5');
@@ -271,19 +250,7 @@ const IntroSequence = ({ onFinish }) => {
       {/* ── Stadium silhouette ── */}
       <StadiumBG />
 
-      {/* ── Ambient haze ── */}
-      <div
-        id="scene-haze"
-        style={{
-          position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none',
-          background: `
-            radial-gradient(ellipse 80% 50% at 50% 0%, rgba(74,14,26,0.7) 0%, transparent 70%),
-            radial-gradient(ellipse 60% 40% at 20% 100%, rgba(255,107,53,0.08) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 40% at 80% 100%, rgba(244,197,66,0.06) 0%, transparent 60%),
-            linear-gradient(180deg, #0a0205 0%, #1a050d 60%, #0d0208 100%)
-          `,
-        }}
-      />
+
 
       {/* ── Crowd haze overlay ── */}
       <div style={{
@@ -293,17 +260,7 @@ const IntroSequence = ({ onFinish }) => {
       }} />
 
 
-      {/* ── Lens flare ── */}
-      <div
-        id="lens-flare"
-        style={{
-          position: 'absolute', top: '30%', left: '60%',
-          width: 180, height: 180, opacity: 0, pointerEvents: 'none', zIndex: 20,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(244,197,66,0.4) 30%, transparent 70%)',
-          filter: 'blur(4px)',
-        }}
-      />
+
 
 
 
@@ -318,17 +275,7 @@ const IntroSequence = ({ onFinish }) => {
           padding: '0 12px',
         }}
       >
-        {/* gold sweep overlay */}
-        <div
-          id="gold-sweep"
-          style={{
-            position: 'absolute',
-            top: -10, left: 0,
-            width: '60%', height: '130%',
-            background: 'linear-gradient(90deg, transparent 0%, rgba(244,197,66,0.35) 50%, transparent 100%)',
-            zIndex: 40, pointerEvents: 'none',
-          }}
-        />
+
 
         {/* brand text */}
         <div
