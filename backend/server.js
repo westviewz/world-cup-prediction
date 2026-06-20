@@ -20,6 +20,13 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('MongoDB connection error:', error));
 
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'online',
+    uptime: process.uptime()
+  });
+});
+
 app.use('/api/predictions', require('./routes/predictionRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
