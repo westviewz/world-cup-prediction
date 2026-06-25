@@ -30,13 +30,21 @@ router.post('/', async (req, res) => {
     if (!name || !phone || !winner || !runnerUp || winnerGoals === undefined || runnerUpGoals === undefined) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
+
+    if (/[0-9]/.test(name)) {
+      return res.status(400).json({ error: 'Name must not contain numbers.' });
+    }
     
     if (winner === runnerUp) {
       return res.status(400).json({ error: 'Winner and Runner-up cannot be the same team.' });
     }
 
-    if (winnerGoals <= runnerUpGoals) {
-      return res.status(400).json({ error: 'Winner goals must be greater than runner-up goals.' });
+    if (winnerGoals < 0 || runnerUpGoals < 0) {
+      return res.status(400).json({ error: 'Goals cannot be negative.' });
+    }
+
+    if (winnerGoals < runnerUpGoals) {
+      return res.status(400).json({ error: 'Winner goals cannot be less than runner-up goals.' });
     }
 
     // Check for duplicate phone

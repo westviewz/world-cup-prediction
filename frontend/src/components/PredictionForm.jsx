@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import api from '../api';
@@ -71,7 +71,7 @@ const StepIndicator = ({ step, t }) => (
 );
 
 // ─── Score stepper ────────────────────────────────────────────
-const ScoreStepper = ({ team, value, onChange, isWinner, t }) => (
+const ScoreStepper = ({ team, value, onChange, isWinner, t, inputRef }) => (
   <div className="flex flex-col items-center gap-3">
     {/* Team card */}
     <div
@@ -106,10 +106,16 @@ const ScoreStepper = ({ team, value, onChange, isWinner, t }) => (
 
       <div className="relative flex justify-center w-full">
         <input
+          ref={inputRef}
           type="number"
           min="0"
           value={value === '' ? '' : value}
-          onChange={e => onChange(e.target.value === '' ? '' : parseInt(e.target.value))}
+          onChange={e => {
+            if (e.target.value === '') return onChange('');
+            const val = parseInt(e.target.value);
+            if (!isNaN(val)) onChange(Math.max(0, val));
+          }}
+          onKeyDown={e => { if (e.key === '-' || e.key === 'e') e.preventDefault(); }}
           className="score-input"
         />
         {value === '' && (
@@ -140,6 +146,17 @@ const ScoreStepper = ({ team, value, onChange, isWinner, t }) => (
 const PredictionForm = () => {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
+  const winnerScoreRef = useRef(null);
+
+  // Auto-focus winner score input when step 4 is reached so cursor blinks immediately
+  useEffect(() => {
+    if (step === 4) {
+      const timer = setTimeout(() => {
+        winnerScoreRef.current?.focus();
+      }, 380); // wait for slide-in animation to finish
+      return () => clearTimeout(timer);
+    }
+  }, [step]);
   const [predictionsOpen, setPredictionsOpen] = useState(true);
   const [checkingStatus, setCheckingStatus] = useState(true);
 
@@ -189,7 +206,7 @@ const PredictionForm = () => {
     setError('');
     if (formData.winnerGoals === '' || formData.runnerUpGoals === '')
       return setError(t('form.err_goals'));
-    if (Number(formData.winnerGoals) <= Number(formData.runnerUpGoals))
+    if (Number(formData.winnerGoals) < Number(formData.runnerUpGoals))
       return setError(t('form.err_goals_greater'));
 
     setIsSubmitting(true);
@@ -426,7 +443,14 @@ const PredictionForm = () => {
                     <input
                       type="text"
                       value={formData.name}
-                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      onChange={e => {
+                        // Strip any digits that come through (e.g. paste)
+                        const cleaned = e.target.value.replace(/[0-9]/g, '');
+                        setFormData({ ...formData, name: cleaned });
+                      }}
+                      onKeyDown={e => {
+                        if (/[0-9]/.test(e.key)) e.preventDefault();
+                      }}
                       placeholder={t('form.full_name')}
                       className="w-full pl-12 pr-4 py-4 rounded-xl text-white placeholder-gray-500 focus:outline-none transition-all text-base font-medium"
                       style={{
@@ -580,6 +604,7 @@ const PredictionForm = () => {
                       onChange={v => setFormData({ ...formData, winnerGoals: v })}
                       isWinner={true}
                       t={t}
+                      inputRef={winnerScoreRef}
                     />
 
                     {/* VS Divider */}

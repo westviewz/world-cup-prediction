@@ -131,6 +131,13 @@
 .score-input:focus {
   border-color: #F4C542;
   box-shadow: 0 0 25px rgba(244,197,66,0.45);
+  caret-color: #F4C542;
+  animation: caretBlink 0.9s ease-in-out infinite;
+}
+
+@keyframes caretBlink {
+  0%, 49% { caret-color: #F4C542; }
+  50%, 100% { caret-color: transparent; }
 }
 
 @media (min-width: 400px) {
