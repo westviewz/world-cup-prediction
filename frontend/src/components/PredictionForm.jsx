@@ -198,11 +198,7 @@ const PredictionForm = () => {
   );
 
   // Shows which half the runner-up pool is drawn from
-  const winnerHalfLabel = formData.winner
-    ? BRACKET_HALF_1.includes(formData.winner)
-      ? 'opposite bracket half (Fixtures 9–16 side)'
-      : 'opposite bracket half (Fixtures 1–8 side)'
-    : null;
+  // Text is displayed below in the banner if a winner is selected
 
   // ── Validate & advance ──
   const handleNext = () => {
@@ -590,13 +586,13 @@ const PredictionForm = () => {
                   </div>
 
                   {/* Bracket half info banner */}
-                  {winnerHalfLabel && (
+                  {formData.winner && (
                     <div
                       className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold"
                       style={{ background: 'rgba(244,197,66,0.08)', border: '1px solid rgba(244,197,66,0.2)', color: 'rgba(244,197,66,0.85)' }}
                     >
                       <span>⚖️</span>
-                      <span>Showing only teams from the opposite bracket half ({winnerHalfLabel})</span>
+                      <span>Showing only teams that can realistically reach the Final</span>
                     </div>
                   )}
 
