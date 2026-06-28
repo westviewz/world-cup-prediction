@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import api from '../api';
-import { teams, teamCodes } from '../utils/teams';
+import { teamCodes } from '../utils/teams';
+import { qualifiedTeams, getRunnerUpOptions, BRACKET_HALF_1 } from '../utils/bracketData';
 import { User, Phone, Trophy, ChevronUp, ChevronDown, CheckCircle2, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -71,7 +72,7 @@ const StepIndicator = ({ step, t }) => (
 );
 
 // ─── Score stepper ────────────────────────────────────────────
-const ScoreStepper = ({ team, value, onChange, isWinner, t, inputRef }) => (
+const ScoreStepper = ({ team, value, onChange, isWinner, t, inputRef, onNextFocus }) => (
   <div className="flex flex-col items-center gap-3">
     {/* Team card */}
     <div
@@ -113,7 +114,11 @@ const ScoreStepper = ({ team, value, onChange, isWinner, t, inputRef }) => (
           onChange={e => {
             if (e.target.value === '') return onChange('');
             const val = parseInt(e.target.value);
-            if (!isNaN(val)) onChange(Math.max(0, val));
+            if (!isNaN(val)) {
+              onChange(Math.max(0, val));
+              // Auto-advance to next input after a digit is entered
+              if (onNextFocus) onNextFocus();
+            }
           }}
           onKeyDown={e => { if (e.key === '-' || e.key === 'e') e.preventDefault(); }}
           className="score-input"
@@ -147,6 +152,7 @@ const PredictionForm = () => {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const winnerScoreRef = useRef(null);
+  const runnerUpScoreRef = useRef(null);
 
   // Auto-focus winner score input when step 4 is reached so cursor blinks immediately
   useEffect(() => {
@@ -180,7 +186,23 @@ const PredictionForm = () => {
   const [isSuccess,    setIsSuccess]    = useState(() => localStorage.getItem('predictionSubmitted') === 'true');
   const [teamSearch,   setTeamSearch]   = useState('');
 
-  const filteredTeams = teams.filter(t => t.toLowerCase().includes(teamSearch.toLowerCase()));
+  // Winner candidates: all 32 qualified teams
+  const filteredWinnerTeams = qualifiedTeams.filter(t =>
+    t.toLowerCase().includes(teamSearch.toLowerCase())
+  );
+
+  // Runner-up candidates: only opposite bracket half from chosen winner
+  const runnerUpPool = getRunnerUpOptions(formData.winner);
+  const filteredRunnerUpTeams = runnerUpPool.filter(t =>
+    t.toLowerCase().includes(teamSearch.toLowerCase())
+  );
+
+  // Shows which half the runner-up pool is drawn from
+  const winnerHalfLabel = formData.winner
+    ? BRACKET_HALF_1.includes(formData.winner)
+      ? 'opposite bracket half (Fixtures 9–16 side)'
+      : 'opposite bracket half (Fixtures 1–8 side)'
+    : null;
 
   // ── Validate & advance ──
   const handleNext = () => {
@@ -509,13 +531,20 @@ const PredictionForm = () => {
 
                   {/* Team grid */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
-                    {filteredTeams.map(team => (
+                    {filteredWinnerTeams.map(team => (
                       <button
                         key={team}
                         type="button"
                         onClick={(e) => {
                           if (formData.winner !== team) triggerCardConfetti(e);
-                          setFormData({ ...formData, winner: team });
+                          // Reset runner-up if it's no longer valid for the new winner
+                          const newRunnerUpPool = getRunnerUpOptions(team);
+                          const runnerUpStillValid = newRunnerUpPool.includes(formData.runnerUp);
+                          setFormData({
+                            ...formData,
+                            winner: team,
+                            runnerUp: runnerUpStillValid ? formData.runnerUp : ''
+                          });
                         }}
                         className={`team-card ${formData.winner === team ? 'selected' : ''}`}
                       >
@@ -530,7 +559,7 @@ const PredictionForm = () => {
                         </span>
                       </button>
                     ))}
-                    {filteredTeams.length === 0 && (
+                    {filteredWinnerTeams.length === 0 && (
                       <div className="col-span-full py-10 text-center text-gray-500 text-sm">{t('form.no_countries')}</div>
                     )}
                   </div>
@@ -560,18 +589,28 @@ const PredictionForm = () => {
                     />
                   </div>
 
+                  {/* Bracket half info banner */}
+                  {winnerHalfLabel && (
+                    <div
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold"
+                      style={{ background: 'rgba(244,197,66,0.08)', border: '1px solid rgba(244,197,66,0.2)', color: 'rgba(244,197,66,0.85)' }}
+                    >
+                      <span>⚖️</span>
+                      <span>Showing only teams from the opposite bracket half ({winnerHalfLabel})</span>
+                    </div>
+                  )}
+
                   {/* Team grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[340px] overflow-y-auto pr-1">
-                    {filteredTeams.map(team => (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-[300px] overflow-y-auto pr-1">
+                    {filteredRunnerUpTeams.map(team => (
                       <button
                         key={team}
                         type="button"
-                        disabled={formData.winner === team}
                         onClick={(e) => {
                           if (formData.runnerUp !== team) triggerCardConfetti(e);
                           setFormData({ ...formData, runnerUp: team });
                         }}
-                        className={`team-card ${formData.runnerUp === team ? 'selected' : ''} ${formData.winner === team ? 'opacity-25 cursor-not-allowed' : ''}`}
+                        className={`team-card ${formData.runnerUp === team ? 'selected' : ''}`}
                       >
                         {formData.runnerUp === team && (
                           <div className="absolute top-2 right-2">
@@ -584,7 +623,7 @@ const PredictionForm = () => {
                         </span>
                       </button>
                     ))}
-                    {filteredTeams.length === 0 && (
+                    {filteredRunnerUpTeams.length === 0 && (
                       <div className="col-span-full py-10 text-center text-gray-500 text-sm">{t('form.no_countries')}</div>
                     )}
                   </div>
@@ -605,6 +644,7 @@ const PredictionForm = () => {
                       isWinner={true}
                       t={t}
                       inputRef={winnerScoreRef}
+                      onNextFocus={() => runnerUpScoreRef.current?.focus()}
                     />
 
                     {/* VS Divider */}
@@ -624,6 +664,7 @@ const PredictionForm = () => {
                       onChange={v => setFormData({ ...formData, runnerUpGoals: v })}
                       isWinner={false}
                       t={t}
+                      inputRef={runnerUpScoreRef}
                     />
                   </div>
                 </motion.div>
