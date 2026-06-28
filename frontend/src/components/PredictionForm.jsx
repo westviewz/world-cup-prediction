@@ -592,7 +592,7 @@ const PredictionForm = () => {
                       style={{ background: 'rgba(244,197,66,0.08)', border: '1px solid rgba(244,197,66,0.2)', color: 'rgba(244,197,66,0.85)' }}
                     >
                       <span>⚖️</span>
-                      <span>Showing only teams that can realistically reach the Final</span>
+                      <span>{t('form.bracket_hint')}</span>
                     </div>
                   )}
 

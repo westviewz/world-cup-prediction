@@ -52,7 +52,8 @@
     "err_runner": "Please select a runner-up team.",
     "err_different": "Winner and Runner-up must be different teams.",
     "err_goals": "Please enter goals for both teams.",
-    "err_goals_greater": "Winner goals must be greater than Runner-up goals."
+    "err_goals_greater": "Winner goals must be greater than Runner-up goals.",
+    "bracket_hint": "Showing only teams that can realistically reach the Final"
   },
   "leaderboard": {
     "scoring_title": "TOURNAMENT SCORING",
