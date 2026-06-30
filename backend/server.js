@@ -11,9 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
+// Apply helmet with CORP protection on API routes (same-origin)
 app.use(helmet({
   contentSecurityPolicy: false,
-  crossOriginResourcePolicy: false,   // Allow Clarity-Bot to fetch CSS/JS for session replay
+  crossOriginResourcePolicy: { policy: 'same-origin' }, // Protect API routes
   referrerPolicy: { policy: 'no-referrer-when-downgrade' },
 }));
 app.use(express.json());
@@ -32,8 +33,12 @@ app.get('/health', (req, res) => {
 app.use('/api/predictions', require('./routes/predictionRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Serve frontend static files with cross-origin policy so Clarity-Bot can fetch CSS/JS for session replay
+app.use(express.static(path.join(__dirname, '../frontend/dist'), {
+  setHeaders: (res) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
 
 // Catch-all route to serve the React app
 app.get(/.*/, (req, res) => {
