@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import IntroSequence from './components/IntroSequence';
-import { clarity } from 'react-microsoft-clarity';
 
 function App() {
   const [introFinished, setIntroFinished] = useState(() => {
     return localStorage.getItem('introFinished') === 'true';
   });
-
-  useEffect(() => {
-    clarity.init('xf7wx1r2ah');
-  }, []);
 
   const handleIntroFinish = () => {
     localStorage.setItem('introFinished', 'true');
