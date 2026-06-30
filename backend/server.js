@@ -13,6 +13,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(helmet({
   contentSecurityPolicy: false,
+  crossOriginResourcePolicy: false,   // Allow Clarity-Bot to fetch CSS/JS for session replay
+  referrerPolicy: { policy: 'no-referrer-when-downgrade' },
 }));
 app.use(express.json());
 
