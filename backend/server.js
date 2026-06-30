@@ -11,10 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-// Apply helmet with CORP protection on API routes (same-origin)
+// CORP same-origin prevents other pages from embedding your resources as subresources
+// (Spectre-style side-channel attacks). API access is controlled separately by CORS above.
 app.use(helmet({
   contentSecurityPolicy: false,
-  crossOriginResourcePolicy: { policy: 'same-origin' }, // Protect API routes
+  crossOriginResourcePolicy: { policy: 'same-origin' },
   referrerPolicy: { policy: 'no-referrer-when-downgrade' },
 }));
 app.use(express.json());
