@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Download, Users, TrendingUp, Settings as SettingsIcon, LogOut, Trophy, Search } from 'lucide-react';
 import api from '../api';
-import { teamFlags, teamCodes } from '../utils/teams';
+import { teamCodes } from '../utils/teams';
+import { qualifiedTeams } from '../utils/bracketData';
 
 const Flag = ({ team, className = 'w-5 h-auto' }) => {
   const code = teamCodes[team];
@@ -288,8 +289,8 @@ const AdminDashboard = () => {
                     onChange={e => setSettings({ ...settings, actualWinner: e.target.value })}
                   >
                     <option value="">Select Winner</option>
-                    {Object.keys(teamFlags).map(t => (
-                      <option key={t} value={t}>{t} {teamFlags[t]}</option>
+                    {qualifiedTeams.map(t => (
+                      <option key={t} value={t}>{t}</option>
                     ))}
                   </Select>
 
@@ -299,8 +300,8 @@ const AdminDashboard = () => {
                     onChange={e => setSettings({ ...settings, actualRunnerUp: e.target.value })}
                   >
                     <option value="">Select Runner-up</option>
-                    {Object.keys(teamFlags).map(t => (
-                      <option key={t} value={t}>{t} {teamFlags[t]}</option>
+                    {qualifiedTeams.map(t => (
+                      <option key={t} value={t}>{t}</option>
                     ))}
                   </Select>
 
