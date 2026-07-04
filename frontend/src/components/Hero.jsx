@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -30,8 +30,24 @@ const FlagBadge = ({ team, code, style }) => (
 
 const Hero = ({ onPredictClick }) => {
   const { t } = useTranslation();
-  const bgRef  = useRef(null);
+  const bgRef    = useRef(null);
   const titleRef = useRef(null);
+
+  // ── Prediction deadline: July 15 2026 12:00 AM IST = July 14 2026 18:30 UTC ──
+  const DEADLINE = new Date('2026-07-14T18:30:00Z').getTime();
+
+  const calcTimeLeft = () => {
+    const dist = DEADLINE - Date.now();
+    if (dist <= 0) return null;
+    return {
+      days:    Math.floor(dist / 86400000),
+      hours:   Math.floor((dist % 86400000) / 3600000),
+      minutes: Math.floor((dist % 3600000)  / 60000),
+      seconds: Math.floor((dist % 60000)    / 1000),
+    };
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calcTimeLeft);
 
   useEffect(() => {
     gsap.to(bgRef.current, {
@@ -44,6 +60,11 @@ const Hero = ({ onPredictClick }) => {
         scrub: true,
       },
     });
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => setTimeLeft(calcTimeLeft()), 1000);
+    return () => clearInterval(id);
   }, []);
 
   const topTeams = [
@@ -151,6 +172,47 @@ const Hero = ({ onPredictClick }) => {
         >
           The world's greatest football tournament is here. Make your predictions, challenge your friends, and secure your place in history.
         </motion.p>
+
+        {/* ── Prediction Deadline Countdown (placed above CTA) ── */}
+        {timeLeft && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.55 }}
+            className="flex flex-col items-center gap-1.5 mb-6"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
+              ⏰ {t('hero.countdown_label')}
+            </p>
+            <div className="flex items-center gap-1">
+              {[
+                { v: timeLeft.days,    l: t('hero.cd_d') },
+                { v: timeLeft.hours,   l: t('hero.cd_h') },
+                { v: timeLeft.minutes, l: t('hero.cd_m') },
+                { v: timeLeft.seconds, l: t('hero.cd_s') },
+              ].map(({ v, l }, i) => (
+                <React.Fragment key={l}>
+                  <div
+                    className="flex flex-col items-center min-w-[38px] py-1 px-1.5 rounded-lg"
+                    style={{
+                      background: timeLeft.days < 1 ? 'rgba(251,146,60,0.15)' : 'rgba(244,197,66,0.1)',
+                      border: `1px solid ${timeLeft.days < 1 ? 'rgba(251,146,60,0.45)' : 'rgba(244,197,66,0.25)'}`,
+                    }}
+                  >
+                    <span
+                      className="text-base sm:text-lg font-black tabular-nums leading-none"
+                      style={{ color: timeLeft.days < 1 ? '#fb923c' : '#F4C542' }}
+                    >
+                      {String(v).padStart(2, '0')}
+                    </span>
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 mt-0.5">{l}</span>
+                  </div>
+                  {i < 3 && <span className="text-gray-600 font-bold text-xs mb-3 mx-0.5">:</span>}
+                </React.Fragment>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* CTA Button */}
         <motion.div

@@ -4,7 +4,12 @@
     "title2": "FIFA WORLD CUP",
     "title3": " 2026 CHAMPION",
     "description": "Choose the Winner, Runner-up and Final Score. Compete with football fans worldwide.",
-    "cta_predict": "Make Your Prediction"
+    "cta_predict": "Make Your Prediction",
+    "countdown_label": "Predictions close in",
+    "cd_d": "D",
+    "cd_h": "H",
+    "cd_m": "M",
+    "cd_s": "S"
   },
   "intro": {
     "presents": "presents",
