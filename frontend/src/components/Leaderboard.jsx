@@ -53,8 +53,8 @@ const Leaderboard = () => {
     };
     fetchLeaderboard();
 
-    // Countdown to July 19 2026
-    const target = new Date('2026-07-19T00:00:00Z').getTime();
+    // Countdown to July 20 2026 3:30 AM IST (July 19 2026 22:00 UTC)
+    const target = new Date('2026-07-19T22:00:00Z').getTime();
     const interval = setInterval(() => {
       const dist = target - Date.now();
       if (dist < 0) { clearInterval(interval); return; }
