@@ -213,30 +213,8 @@ const Hero = ({ onPredictClick }) => {
             </div>
           </motion.div>
         )}
-
-        {/* CTA Button */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-        >
-          <button
-            onClick={onPredictClick}
-            id="make-prediction-btn"
-            className="group relative inline-flex items-center justify-center gap-3 px-10 py-4 sm:py-5 text-base sm:text-lg font-black tracking-wide rounded-full overflow-hidden animate-glow transition-all duration-300 hover:scale-105 active:scale-95"
-            style={{
-              background: 'linear-gradient(135deg, #F9E2AE 0%, #F4C542 50%, #c9920a 100%)',
-              color: '#1A0810',
-              boxShadow: '0 0 35px rgba(244,197,66,0.5), 0 4px 25px rgba(0,0,0,0.5)',
-            }}
-          >
-            {/* Shine sweep */}
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
-            <span className="relative">⚽</span>
-            <span className="relative">{t('hero.cta_predict')}</span>
-          </button>
-        </motion.div>
       </div>
+
 
       {/* Scroll indicator */}
       <motion.div
