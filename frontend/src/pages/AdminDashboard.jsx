@@ -4,6 +4,7 @@ import { Download, Users, TrendingUp, Settings as SettingsIcon, LogOut, Trophy, 
 import api from '../api';
 import { teamCodes } from '../utils/teams';
 import { qualifiedTeams } from '../utils/bracketData';
+import LuckyDraw from '../components/LuckyDraw';
 
 const Flag = ({ team, className = 'w-5 h-auto' }) => {
   const code = teamCodes[team];
@@ -74,7 +75,7 @@ const AdminDashboard = () => {
   });
   const [search,  setSearch]  = useState('');
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('submissions'); // 'submissions' | 'settings'
+  const [activeTab, setActiveTab] = useState('submissions'); // 'submissions' | 'settings' | 'lucky-draw'
   const navigate = useNavigate();
 
   const fetchDashboard = async () => {
@@ -191,33 +192,48 @@ const AdminDashboard = () => {
           <StatCard icon={Trophy}     label="Top Score"   value={stats.mostPredictedScore}   accentColor="#3b82f6" />
         </div>
 
-        {/* ── Mobile Tab Switcher ── */}
+        {/* ── Tab Switcher (all screen sizes) ── */}
         <div
-          className="flex lg:hidden rounded-2xl p-1 gap-1"
+          className="flex rounded-2xl p-1 gap-1"
           style={{ background: 'rgba(26,8,16,0.8)', border: '1px solid rgba(255,255,255,0.08)' }}
         >
-          {['submissions', 'settings'].map(tab => (
+          {['submissions', 'settings', 'lucky-draw'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold capitalize transition-all"
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all"
               style={{
                 background: activeTab === tab ? 'rgba(244,197,66,0.15)' : 'transparent',
                 color:      activeTab === tab ? '#F4C542' : '#6b7280',
                 border:     activeTab === tab ? '1px solid rgba(244,197,66,0.35)' : '1px solid transparent',
               }}
             >
-              {tab === 'submissions' ? '📋 Submissions' : '⚙️ Settings'}
+              {tab === 'submissions' ? '📋 Submissions' : tab === 'settings' ? '⚙️ Settings' : '🎲 Lucky Draw'}
             </button>
           ))}
         </div>
 
-        {/* ── Main content — side by side on lg, tabbed on mobile ── */}
+        {/* ── Main content: side-by-side on lg, tabbed on mobile ── */}
+        {/* Lucky Draw takes full width when active */}
+        {activeTab === 'lucky-draw' ? (
+          <div
+            className="rounded-2xl p-5"
+            style={{
+              background: 'rgba(26,8,16,0.7)',
+              border: '1px solid rgba(244,197,66,0.12)',
+            }}
+          >
+            <h2 className="text-base font-black mb-5 flex items-center gap-2" style={{ color: '#F4C542' }}>
+              🎲 Lucky Draw
+            </h2>
+            <LuckyDraw />
+          </div>
+        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Settings Panel */}
           <div
-            className={`lg:col-span-1 lg:block ${activeTab === 'settings' ? 'block' : 'hidden'}`}
+            className={`lg:col-span-1 ${activeTab === 'settings' ? 'block' : 'hidden lg:block'}`}
           >
             <div
               className="rounded-2xl p-5 h-fit"
@@ -434,6 +450,7 @@ const AdminDashboard = () => {
           </div>
 
         </div>
+        )} {/* end lucky-draw ternary */}
       </div>
     </div>
   );

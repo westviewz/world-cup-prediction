@@ -97,4 +97,24 @@ router.get('/leaderboard', async (req, res) => {
   }
 });
 
+// Public: Get lucky draw winner (shown on homepage after draw is conducted)
+router.get('/lucky-draw-winner', async (req, res) => {
+  try {
+    const LuckyDraw = require('../models/LuckyDraw');
+    const result = await LuckyDraw.findOne({ contest: 'World Cup Prediction 2026' }).lean();
+    if (!result) return res.json({ winner: null });
+    res.json({
+      winner: {
+        name:          result.name,
+        phone:         result.phone,
+        drawTime:      result.drawTime,
+        eligibleCount: result.eligibleCount,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

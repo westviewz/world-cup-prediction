@@ -28,7 +28,8 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/predictions', require('./routes/predictionRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/admin',       require('./routes/adminRoutes'));
+app.use('/api/admin/lucky-draw', require('./routes/luckyDrawRoutes'));
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '../frontend/dist')));

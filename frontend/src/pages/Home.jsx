@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import PredictionForm from '../components/PredictionForm';
 import Leaderboard from '../components/Leaderboard';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import LuckyDrawWinnerBanner from '../components/LuckyDrawWinnerBanner';
 
 // Footer
 const Footer = () => {
@@ -45,6 +46,9 @@ const Home = () => {
 
       {/* Divider */}
       <div className="section-divider my-4" />
+
+      {/* Lucky Draw Winner Announcement */}
+      <LuckyDrawWinnerBanner />
 
       {/* Leaderboard + Scoring */}
       <Leaderboard />
